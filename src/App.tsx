@@ -25,32 +25,39 @@ const App = () => {
       languageLabel={t.languageLabel}
       onLocaleChange={setLocale}
     >
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="hero__content">
-          <p className="eyebrow">Portfolio Demo</p>
+      <section className="profile-hero" aria-labelledby="hero-title">
+        <div className="profile-hero__intro">
+          <p className="eyebrow">Frontend Engineer</p>
           <h1 id="hero-title">{t.heroTitle}</h1>
           <p>{t.heroBody}</p>
-          <div className="hero__meta" aria-label="Technology stack">
-            {['React', 'TypeScript', 'ECharts', 'Mock API', 'Timeline'].map((item) => (
+          <div className="profile-hero__focus" aria-label="Portfolio focus">
+            {['Data Visualization', 'Gantt Timeline', 'Custom Grid', 'i18n'].map((item) => (
               <span className="tag" key={item}>
                 {item}
               </span>
             ))}
           </div>
         </div>
-        <aside className="hero__panel" aria-label="Dashboard summary">
+        <aside className="profile-hero__panel" aria-label="Portfolio snapshot">
+          <div className="profile-hero__identity">
+            <span aria-hidden="true">RHJ</span>
+            <div>
+              <strong>류호진</strong>
+              <small>React + TypeScript</small>
+            </div>
+          </div>
           <dl>
             <div>
-              <dt>Latest active users</dt>
-              <dd>{viewModel?.summary.latestActiveUsers ?? '-'}</dd>
+              <dt>Chart cases</dt>
+              <dd>{viewModel?.payload.chartImplementationMetrics.length ?? '-'}</dd>
             </div>
             <div>
-              <dt>Average conversion</dt>
-              <dd>{viewModel ? `${viewModel.summary.averageConversion}%` : '-'}</dd>
+              <dt>Timeline items</dt>
+              <dd>{viewModel?.payload.roadmapItems.length ?? '-'}</dd>
             </div>
             <div>
-              <dt>Stable deliveries</dt>
-              <dd>{viewModel?.summary.stableDeliveries ?? '-'}</dd>
+              <dt>Grid rows</dt>
+              <dd>{viewModel?.payload.portfolioGridRows.length ?? '-'}</dd>
             </div>
           </dl>
           <button
@@ -93,6 +100,7 @@ const App = () => {
             section={t.sections.table}
             headers={t.tableHeaders}
             rows={viewModel.payload.deliveryRows}
+            gridRows={viewModel.payload.portfolioGridRows}
           />
         </>
       )}
@@ -101,4 +109,3 @@ const App = () => {
 };
 
 export default App;
-

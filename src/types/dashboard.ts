@@ -28,6 +28,24 @@ export interface MonthlyBusinessMetric {
   conversionRate: number;
 }
 
+export interface ChartImplementationMetric {
+  month: string;
+  current: number;
+  previous: number;
+  reviewScore: number;
+}
+
+export interface ChartCapabilityNode {
+  name: string;
+  value: number;
+  children?: ChartCapabilityNode[];
+}
+
+export interface ChartCategoryShare {
+  name: string;
+  value: number;
+}
+
 export interface QualityScatterPoint {
   feature: string;
   team: string;
@@ -67,6 +85,7 @@ export interface RoadmapItem {
   endDate: string;
   progress: number;
   status: RoadmapStatus;
+  isVisible?: boolean;
 }
 
 export interface DeliveryRow {
@@ -80,15 +99,44 @@ export interface DeliveryRow {
   updatedAt: string;
 }
 
+export type PortfolioGridStatus = 'Stable' | 'Improving' | 'Review';
+
+export type PortfolioGridImpact = 'High' | 'Medium' | 'Low';
+
+export interface PortfolioGridTask {
+  id: string;
+  name: string;
+  owner: string;
+  status: PortfolioGridStatus;
+  impact: PortfolioGridImpact;
+  updatedAt: string;
+  notes: string;
+}
+
+export interface PortfolioGridRow {
+  id: string;
+  capability: string;
+  category: string;
+  owner: string;
+  status: PortfolioGridStatus;
+  coverage: number;
+  updatedAt: string;
+  children: PortfolioGridTask[];
+}
+
 export interface DashboardPayload {
   kpis: KpiMetric[];
   skills: SkillSummary[];
   monthlyMetrics: MonthlyBusinessMetric[];
+  chartImplementationMetrics: ChartImplementationMetric[];
+  chartCapabilityTree: ChartCapabilityNode[];
+  chartCategoryShare: ChartCategoryShare[];
   qualityPoints: QualityScatterPoint[];
   workflow: WorkflowSankeyData;
   roadmapGroups: RoadmapGroup[];
   roadmapItems: RoadmapItem[];
   deliveryRows: DeliveryRow[];
+  portfolioGridRows: PortfolioGridRow[];
 }
 
 export interface ApiResponse<TData> {
@@ -97,4 +145,3 @@ export interface ApiResponse<TData> {
   generatedAt: string;
   latencyMs: number;
 }
-

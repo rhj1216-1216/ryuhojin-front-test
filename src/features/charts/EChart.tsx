@@ -1,6 +1,15 @@
-import { useEffect, useRef } from 'react';
-import { BarChart, LineChart, SankeyChart, ScatterChart } from 'echarts/charts';
+import { useEffect, useId, useRef } from 'react';
 import {
+  BarChart,
+  LineChart,
+  PieChart,
+  SankeyChart,
+  ScatterChart,
+  TreemapChart,
+} from 'echarts/charts';
+import {
+  AriaComponent,
+  DataZoomComponent,
   GridComponent,
   LegendComponent,
   TooltipComponent,
@@ -8,36 +17,47 @@ import {
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import type { EChartsOption } from 'echarts';
-import { CanvasRenderer } from 'echarts/renderers';
+import { SVGRenderer } from 'echarts/renderers';
 
 echarts.use([
   BarChart,
   LineChart,
+  PieChart,
   SankeyChart,
   ScatterChart,
+  TreemapChart,
+  AriaComponent,
+  DataZoomComponent,
   GridComponent,
   LegendComponent,
   TooltipComponent,
   VisualMapComponent,
-  CanvasRenderer,
+  SVGRenderer,
 ]);
 
 interface EChartProps {
   option: EChartsOption;
   ariaLabel: string;
+  fallbackDescription?: string;
   height?: number;
 }
 
-export const EChart = ({ option, ariaLabel, height = 320 }: EChartProps) => {
+export const EChart = ({
+  option,
+  ariaLabel,
+  fallbackDescription,
+  height = 320,
+}: EChartProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<ReturnType<typeof echarts.init> | null>(null);
+  const fallbackId = useId();
 
   useEffect(() => {
     if (!containerRef.current) {
       return undefined;
     }
 
-    const chart = echarts.init(containerRef.current);
+    const chart = echarts.init(containerRef.current, undefined, { renderer: 'svg' });
     chartRef.current = chart;
 
     const resize = () => {
@@ -67,8 +87,12 @@ export const EChart = ({ option, ariaLabel, height = 320 }: EChartProps) => {
         className="chart-canvas"
         role="img"
         aria-label={ariaLabel}
+        aria-describedby={fallbackId}
         style={{ height }}
       />
+      <p id={fallbackId} className="sr-only">
+        {fallbackDescription ?? ariaLabel}
+      </p>
     </div>
   );
 };

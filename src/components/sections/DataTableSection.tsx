@@ -1,4 +1,5 @@
-import type { DeliveryRow } from '../../types/dashboard';
+import type { DeliveryRow, PortfolioGridRow } from '../../types/dashboard';
+import { CustomDataGrid } from '../../features/dataGrid/CustomDataGrid';
 import { Card } from '../ui/Card';
 import { Section } from '../ui/Section';
 
@@ -20,12 +21,14 @@ interface DataTableSectionProps {
   };
   headers: TableHeaders;
   rows: DeliveryRow[];
+  gridRows: PortfolioGridRow[];
 }
 
 export const DataTableSection = ({
   section,
   headers,
   rows,
+  gridRows,
 }: DataTableSectionProps) => (
   <Section
     id="delivery"
@@ -33,6 +36,12 @@ export const DataTableSection = ({
     title={section.title}
     description={section.description}
   >
+    <Card
+      title="Custom Data Grid"
+      description="AccordionTable과 RealGrid 경험을 더미 데이터로 재구성한 검색, 정렬, 필터, 선택 예제입니다."
+    >
+      <CustomDataGrid rows={gridRows} />
+    </Card>
     <Card>
       <div className="table-scroll">
         <table className="data-table">
@@ -72,4 +81,3 @@ export const DataTableSection = ({
     </Card>
   </Section>
 );
-

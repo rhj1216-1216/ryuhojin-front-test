@@ -32,9 +32,9 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
   ko: {
     appName: 'Frontend Portfolio Dashboard',
     appSubtitle: 'React + TypeScript 데이터 시각화 데모',
-    heroTitle: '실무형 프론트엔드 역량을 한 화면에서 설명하는 데모 앱',
+    heroTitle: '데이터가 많은 화면을 구조화하는 프론트엔드 작업 기록',
     heroBody:
-      '차트 공통화, mock API, custom hook, timeline, 데이터 테이블을 분리된 구조로 구성한 포트폴리오용 대시보드입니다.',
+      'ECharts, Gantt timeline, Custom Data Grid를 더미 데이터로 재구성해 운영형 UI의 데이터 흐름과 컴포넌트 책임을 보여줍니다.',
     languageLabel: '언어 변경',
     refreshLabel: '데이터 새로고침',
     loading: '데이터를 불러오는 중입니다.',
@@ -61,21 +61,21 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
       },
       charts: {
         eyebrow: 'ECharts Showcase',
-        title: '차트 공통화 데모',
+        title: 'ECharts 차트 아카이브 데모',
         description:
-          '동일한 wrapper와 option builder 패턴으로 3가지 이상의 시각화를 구성했습니다.',
+          '포트폴리오의 차트 공통화 경험을 바탕으로 bar+line, dataZoom, pie, treemap, sankey 예제를 구성했습니다.',
       },
       timeline: {
         eyebrow: 'Roadmap',
-        title: 'react-calendar-timeline 일정 예제',
+        title: 'react-calendar-timeline 편집 예제',
         description:
-          '프로젝트 일정과 책임 구간을 styled-components 기반 컨테이너에서 표현합니다.',
+          '왼쪽 리스트에서 timeline 항목을 수정하고, 확대/축소와 item move/resize 흐름을 확인할 수 있습니다.',
       },
       table: {
         eyebrow: 'Data Grid',
-        title: '전달 품질 테이블',
+        title: 'Custom Data Grid',
         description:
-          'mock API 응답을 테이블 뷰로 표현하고 상태, 리드타임, 차트 커버리지를 비교합니다.',
+          '계층형 데이터, 검색, 필터, 정렬, 선택을 포함한 포트폴리오형 더미 그리드와 전달 품질 테이블을 함께 보여줍니다.',
       },
     },
     tableHeaders: {
@@ -91,9 +91,9 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
   en: {
     appName: 'Frontend Portfolio Dashboard',
     appSubtitle: 'React + TypeScript data visualization demo',
-    heroTitle: 'A working dashboard that explains practical frontend skills',
+    heroTitle: 'Frontend work notes for dense data-driven screens',
     heroBody:
-      'A portfolio dashboard with separated chart options, mock APIs, custom hooks, timeline, and data-table structures.',
+      'A dummy-data reconstruction of ECharts, Gantt timelines, and custom grids with clear data flow and component boundaries.',
     languageLabel: 'Change language',
     refreshLabel: 'Refresh data',
     loading: 'Loading dashboard data.',
@@ -120,21 +120,21 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
       },
       charts: {
         eyebrow: 'ECharts Showcase',
-        title: 'Reusable Chart Demo',
+        title: 'ECharts Archive Demo',
         description:
-          'Three visualization types share a wrapper and option-builder pattern.',
+          'Bar+line, dataZoom, pie, treemap, and sankey examples share a wrapper and option-builder pattern.',
       },
       timeline: {
         eyebrow: 'Roadmap',
-        title: 'react-calendar-timeline Example',
+        title: 'react-calendar-timeline Editor',
         description:
-          'Project phases and ownership are shown inside a styled-components timeline shell.',
+          'Timeline items can be edited from the left list, zoomed, moved, and resized in the timeline shell.',
       },
       table: {
         eyebrow: 'Data Grid',
-        title: 'Delivery Quality Table',
+        title: 'Custom Data Grid',
         description:
-          'Mock API responses are presented as a comparison table for status, lead time, and chart coverage.',
+          'A dummy portfolio grid shows nested rows, search, filters, sorting, selection, and delivery quality data.',
       },
     },
     tableHeaders: {
@@ -148,4 +148,3 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
     },
   },
 };
-
