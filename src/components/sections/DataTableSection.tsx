@@ -19,6 +19,35 @@ interface DataTableSectionProps {
     title: string;
     description: string;
   };
+  dataGridCard: {
+    title: string;
+    description: string;
+  };
+  customGridCopy: {
+    ariaLabel: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    categoryLabel: string;
+    allCategoriesLabel: string;
+    selectedLabel: (count: number) => string;
+    editModeLabel: string;
+    editModeNote: string;
+    clearLabel: string;
+    expandLabel: string;
+    collapseLabel: string;
+    selectAllLabel: string;
+    selectRowLabel: (capability: string) => string;
+    toggleRowLabel: (action: string, capability: string) => string;
+    headers: {
+      capability: string;
+      category: string;
+      owner: string;
+      status: string;
+      coverage: string;
+      updated: string;
+    };
+    impactSuffix: string;
+  };
   headers: TableHeaders;
   rows: DeliveryRow[];
   gridRows: PortfolioGridRow[];
@@ -26,6 +55,8 @@ interface DataTableSectionProps {
 
 export const DataTableSection = ({
   section,
+  dataGridCard,
+  customGridCopy,
   headers,
   rows,
   gridRows,
@@ -37,10 +68,10 @@ export const DataTableSection = ({
     description={section.description}
   >
     <Card
-      title="Custom Data Grid"
-      description="AccordionTable과 RealGrid 경험을 더미 데이터로 재구성한 검색, 정렬, 필터, 선택 예제입니다."
+      title={dataGridCard.title}
+      description={dataGridCard.description}
     >
-      <CustomDataGrid rows={gridRows} />
+      <CustomDataGrid rows={gridRows} copy={customGridCopy} />
     </Card>
     <Card>
       <div className="table-scroll">

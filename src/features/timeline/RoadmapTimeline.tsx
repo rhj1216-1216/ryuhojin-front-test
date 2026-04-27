@@ -27,6 +27,25 @@ import type { RoadmapGroup, RoadmapItem, RoadmapStatus } from '../../types/dashb
 interface RoadmapTimelineProps {
   groups: RoadmapGroup[];
   items: RoadmapItem[];
+  copy: {
+    editorLabel: string;
+    editorTitle: string;
+    editorDescription: string;
+    visibleLabel: string;
+    titleLabel: string;
+    groupLabel: string;
+    statusLabel: string;
+    startLabel: string;
+    endLabel: string;
+    progressLabel: string;
+    shellLabel: string;
+    summary: (visibleCount: number, groupCount: number) => string;
+    zoomControlsLabel: string;
+    zoomInLabel: string;
+    zoomOutLabel: string;
+    resetLabel: string;
+    sidebarLabel: string;
+  };
 }
 
 interface CalendarItemFields {
@@ -341,7 +360,7 @@ const TimelineShell = styled.div`
   }
 `;
 
-export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
+export const RoadmapTimeline = ({ groups, items, copy }: RoadmapTimelineProps) => {
   const initialRange = useMemo(() => buildInitialRange(items), [items]);
   const [editableItems, setEditableItems] = useState<EditableRoadmapItem[]>(
     () => normalizeItems(items),
@@ -531,10 +550,10 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
 
   return (
     <TimelineWorkbench>
-      <EditorPanel aria-label="Timeline item edit list">
+      <EditorPanel aria-label={copy.editorLabel}>
         <div className="timeline-editor__header">
-          <strong>Timeline Items</strong>
-          <span>왼쪽 리스트에서 제목, 그룹, 기간, 상태, 표시 여부를 수정합니다.</span>
+          <strong>{copy.editorTitle}</strong>
+          <span>{copy.editorDescription}</span>
         </div>
         <div className="timeline-editor__list">
           {editableItems.map((item) => (
@@ -557,12 +576,12 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
                       updateItem(item.id, { isVisible: event.target.checked })
                     }
                   />
-                  Visible
+                  {copy.visibleLabel}
                 </label>
               </div>
               <div className="timeline-editor__fields">
                 <label>
-                  Title
+                  {copy.titleLabel}
                   <input
                     value={item.title}
                     onFocus={() => setActiveItemId(item.id)}
@@ -573,7 +592,7 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
                 </label>
                 <div className="timeline-editor__inline">
                   <label>
-                    Group
+                    {copy.groupLabel}
                     <select
                       value={item.group}
                       onChange={(event: ChangeEvent<HTMLSelectElement>) =>
@@ -588,7 +607,7 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
                     </select>
                   </label>
                   <label>
-                    Status
+                    {copy.statusLabel}
                     <select
                       value={item.status}
                       onChange={(event: ChangeEvent<HTMLSelectElement>) =>
@@ -607,7 +626,7 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
                 </div>
                 <div className="timeline-editor__inline">
                   <label>
-                    Start
+                    {copy.startLabel}
                     <input
                       type="date"
                       value={item.startDate}
@@ -617,7 +636,7 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
                     />
                   </label>
                   <label>
-                    End
+                    {copy.endLabel}
                     <input
                       type="date"
                       value={item.endDate}
@@ -628,7 +647,7 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
                   </label>
                 </div>
                 <label>
-                  Progress
+                  {copy.progressLabel}
                   <input
                     type="number"
                     min={0}
@@ -646,24 +665,24 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
           ))}
         </div>
       </EditorPanel>
-      <TimelineShell aria-label="Portfolio roadmap timeline">
+      <TimelineShell aria-label={copy.shellLabel}>
         <div className="timeline-toolbar">
           <span className="timeline-toolbar__summary">
-            {visibleCount} visible items / {groups.length} groups
+            {copy.summary(visibleCount, groups.length)}
           </span>
-          <div className="timeline-toolbar__actions" aria-label="Timeline zoom controls">
-            <button type="button" aria-label="Zoom in timeline" onClick={() => zoomBy(0.55)}>
-              Zoom In
+          <div className="timeline-toolbar__actions" aria-label={copy.zoomControlsLabel}>
+            <button type="button" aria-label={copy.zoomInLabel} onClick={() => zoomBy(0.55)}>
+              {copy.zoomInLabel}
             </button>
-            <button type="button" aria-label="Zoom out timeline" onClick={() => zoomBy(1.65)}>
-              Zoom Out
+            <button type="button" aria-label={copy.zoomOutLabel} onClick={() => zoomBy(1.65)}>
+              {copy.zoomOutLabel}
             </button>
             <button
               type="button"
-              aria-label="Reset timeline zoom"
+              aria-label={copy.resetLabel}
               onClick={() => setVisibleTime(initialRange)}
             >
-              Reset
+              {copy.resetLabel}
             </button>
           </div>
         </div>
@@ -696,7 +715,7 @@ export const RoadmapTimeline = ({ groups, items }: RoadmapTimelineProps) => {
             groupRenderer={groupRenderer}
           >
             <TimelineHeaders>
-              <SidebarHeader<{ label: string }> headerData={{ label: '구분' }}>
+              <SidebarHeader<{ label: string }> headerData={{ label: copy.sidebarLabel }}>
                 {({ getRootProps, data }) => (
                   <div {...getRootProps()}>
                     <strong>{data.label}</strong>

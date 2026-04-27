@@ -7,6 +7,31 @@ import type {
 
 interface CustomDataGridProps {
   rows: PortfolioGridRow[];
+  copy: {
+    ariaLabel: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    categoryLabel: string;
+    allCategoriesLabel: string;
+    selectedLabel: (count: number) => string;
+    editModeLabel: string;
+    editModeNote: string;
+    clearLabel: string;
+    expandLabel: string;
+    collapseLabel: string;
+    selectAllLabel: string;
+    selectRowLabel: (capability: string) => string;
+    toggleRowLabel: (action: string, capability: string) => string;
+    headers: {
+      capability: string;
+      category: string;
+      owner: string;
+      status: string;
+      coverage: string;
+      updated: string;
+    };
+    impactSuffix: string;
+  };
 }
 
 type SortKey = 'capability' | 'category' | 'coverage' | 'updatedAt';
@@ -55,7 +80,7 @@ const compareRows = (
   return String(first[key]).localeCompare(String(second[key])) * modifier;
 };
 
-export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
+export const CustomDataGrid = ({ rows, copy }: CustomDataGridProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortKey, setSortKey] = useState<SortKey>('capability');
@@ -138,27 +163,27 @@ export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
     sortKey === key ? `${label} ${sortDirection === 'asc' ? '↑' : '↓'}` : label;
 
   return (
-    <div className="custom-grid" aria-label="Portfolio custom data grid">
+    <div className="custom-grid" aria-label={copy.ariaLabel}>
       <div className="custom-grid__toolbar">
         <label>
-          Search
+          {copy.searchLabel}
           <input
             value={searchTerm}
-            placeholder="Search capability or task"
+            placeholder={copy.searchPlaceholder}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setSearchTerm(event.target.value)
             }
           />
         </label>
         <label>
-          Category
+          {copy.categoryLabel}
           <select
             value={categoryFilter}
             onChange={(event: ChangeEvent<HTMLSelectElement>) =>
               setCategoryFilter(event.target.value)
             }
           >
-            <option value="all">All categories</option>
+            <option value="all">{copy.allCategoriesLabel}</option>
             {categories.map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -167,7 +192,7 @@ export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
           </select>
         </label>
         <div className="custom-grid__actions">
-          {isEditMode && <span aria-live="polite">{selectedCount} selected</span>}
+          {isEditMode && <span aria-live="polite">{copy.selectedLabel(selectedCount)}</span>}
           <button
             type="button"
             className={isEditMode ? 'is-active' : undefined}
@@ -177,27 +202,27 @@ export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
               setSelectedRows(new Set());
             }}
           >
-            수정 모드
+            {copy.editModeLabel}
           </button>
           {isEditMode && (
             <button type="button" onClick={() => setSelectedRows(new Set())}>
-              Clear
+              {copy.clearLabel}
             </button>
           )}
           <button
             type="button"
             onClick={() => setExpandedRows(new Set(filteredRows.map((row) => row.id)))}
           >
-            Expand
+            {copy.expandLabel}
           </button>
           <button type="button" onClick={() => setExpandedRows(new Set())}>
-            Collapse
+            {copy.collapseLabel}
           </button>
         </div>
       </div>
       {isEditMode && (
         <p className="custom-grid__mode-note">
-          수정 모드: 헤더 체크로 현재 목록을 전체 선택할 수 있습니다.
+          {copy.editModeNote}
         </p>
       )}
       <div className="custom-grid__board">
@@ -213,7 +238,7 @@ export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
             <label className="custom-grid__select-all">
               <input
                 type="checkbox"
-                aria-label="Select all visible rows"
+                aria-label={copy.selectAllLabel}
                 checked={isAllFilteredSelected}
                 onChange={toggleAllSelection}
               />
@@ -221,24 +246,24 @@ export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
           )}
           <span>
             <button type="button" onClick={() => toggleSort('capability')}>
-              {renderSortLabel('capability', 'Capability')}
+              {renderSortLabel('capability', copy.headers.capability)}
             </button>
           </span>
           <span>
             <button type="button" onClick={() => toggleSort('category')}>
-              {renderSortLabel('category', 'Category')}
+              {renderSortLabel('category', copy.headers.category)}
             </button>
           </span>
-          <span>Owner</span>
-          <span>Status</span>
+          <span>{copy.headers.owner}</span>
+          <span>{copy.headers.status}</span>
           <span>
             <button type="button" onClick={() => toggleSort('coverage')}>
-              {renderSortLabel('coverage', 'Coverage')}
+              {renderSortLabel('coverage', copy.headers.coverage)}
             </button>
           </span>
           <span>
             <button type="button" onClick={() => toggleSort('updatedAt')}>
-              {renderSortLabel('updatedAt', 'Updated')}
+              {renderSortLabel('updatedAt', copy.headers.updated)}
             </button>
           </span>
         </div>
@@ -264,7 +289,7 @@ export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
                     <label className="custom-grid__row-check">
                       <input
                         type="checkbox"
-                        aria-label={`Select ${row.capability}`}
+                        aria-label={copy.selectRowLabel(row.capability)}
                         checked={isSelected}
                         onChange={() => toggleRowSelection(row)}
                       />
@@ -275,7 +300,10 @@ export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
                       type="button"
                       className="custom-grid__caret"
                       aria-expanded={isExpanded}
-                      aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${row.capability}`}
+                      aria-label={copy.toggleRowLabel(
+                        isExpanded ? copy.collapseLabel : copy.expandLabel,
+                        row.capability,
+                      )}
                       onClick={() => toggleExpanded(row.id)}
                     >
                       <span className={isExpanded ? 'is-open' : undefined} />
@@ -300,7 +328,7 @@ export const CustomDataGrid = ({ rows }: CustomDataGridProps) => {
                     {row.children.map((child) => (
                       <div key={child.id} className="custom-grid__child-card">
                         <span>{child.name}</span>
-                        <span>{impactLabel[child.impact]} impact</span>
+                        <span>{`${impactLabel[child.impact]} ${copy.impactSuffix}`}</span>
                         <span>{child.owner}</span>
                         <span className={`status status--${child.status.toLowerCase()}`}>
                           {statusLabel[child.status]}

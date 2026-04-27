@@ -16,7 +16,7 @@ export const Section = ({
   actions,
   children,
 }: PropsWithChildren<SectionProps>) => (
-  <section id={id} className="section" aria-labelledby={`${id}-title`}>
+  <section id={id} className="section" aria-labelledby={`${id}-title`} data-reveal>
     <div className="section__header">
       <div>
         <p className="eyebrow">{eyebrow}</p>
@@ -28,4 +28,3 @@ export const Section = ({
     {children}
   </section>
 );
-

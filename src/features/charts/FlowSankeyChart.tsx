@@ -11,6 +11,21 @@ import { EChart } from './EChart';
 
 interface FlowSankeyChartProps {
   workflow: WorkflowSankeyData;
+  copy: {
+    ariaLabel: string;
+    legendLabel: string;
+    fallbackDescription: string;
+    previousYear: string;
+    currentYear: string;
+    unitLabel: string;
+    legendItems: {
+      veryImproved: string;
+      improved: string;
+      noChange: string;
+      worsened: string;
+      veryWorsened: string;
+    };
+  };
 }
 
 const nodeLabel: Record<string, string> = {
@@ -21,14 +36,6 @@ const nodeLabel: Record<string, string> = {
   'C-1': 'C',
   'D2-1': 'D2',
 };
-
-const legendItems = [
-  { label: '매우 완화', color: judgmentFlowColors.veryImproved },
-  { label: '완화', color: judgmentFlowColors.improved },
-  { label: '변화없음', color: judgmentFlowColors.noChange },
-  { label: '악화', color: judgmentFlowColors.worsened },
-  { label: '매우 악화', color: judgmentFlowColors.veryWorsened },
-];
 
 const numberFormatter = new Intl.NumberFormat('ko-KR');
 
@@ -58,7 +65,14 @@ const buildFlexStyle = (value: number): CSSProperties => ({
   flexBasis: 0,
 });
 
-export const FlowSankeyChart = ({ workflow }: FlowSankeyChartProps) => {
+export const FlowSankeyChart = ({ workflow, copy }: FlowSankeyChartProps) => {
+  const legendItems = [
+    { label: copy.legendItems.veryImproved, color: judgmentFlowColors.veryImproved },
+    { label: copy.legendItems.improved, color: judgmentFlowColors.improved },
+    { label: copy.legendItems.noChange, color: judgmentFlowColors.noChange },
+    { label: copy.legendItems.worsened, color: judgmentFlowColors.worsened },
+    { label: copy.legendItems.veryWorsened, color: judgmentFlowColors.veryWorsened },
+  ];
   const sourceTotals = workflowSourceOrder.map((source) => ({
     key: source,
     value: sumBy(workflow.links, 'source', source),
@@ -70,8 +84,8 @@ export const FlowSankeyChart = ({ workflow }: FlowSankeyChartProps) => {
   const sortedLinks = sortLinks(workflow.links).filter((link) => link.value > 0);
 
   return (
-    <div className="flow-sankey" aria-label="전년 대비 판정현황 sankey chart">
-      <div className="flow-sankey__legend" aria-label="Sankey legend">
+    <div className="flow-sankey" aria-label={copy.ariaLabel}>
+      <div className="flow-sankey__legend" aria-label={copy.legendLabel}>
         {legendItems.map((item) => (
           <span key={item.label}>
             <i style={{ background: item.color }} aria-hidden="true" />
@@ -81,7 +95,7 @@ export const FlowSankeyChart = ({ workflow }: FlowSankeyChartProps) => {
       </div>
       <div className="flow-sankey__body">
         <div className="flow-sankey__side flow-sankey__side--left">
-          <strong className="flow-sankey__year">2024년</strong>
+          <strong className="flow-sankey__year">{copy.previousYear}</strong>
           <div className="flow-sankey__node-stack">
             {sourceTotals.map((node) => (
               <div
@@ -97,15 +111,15 @@ export const FlowSankeyChart = ({ workflow }: FlowSankeyChartProps) => {
         <div className="flow-sankey__center">
           <EChart
             option={buildWorkflowSankeyOption(workflow)}
-            ariaLabel="Year over year status transition sankey chart"
-            fallbackDescription="2024년 A, C, D2 상태가 2025년 A, C, D2 상태로 이동한 비율을 흐름선으로 표시합니다."
+            ariaLabel={copy.ariaLabel}
+            fallbackDescription={copy.fallbackDescription}
             height={214}
           />
         </div>
         <div className="flow-sankey__side flow-sankey__side--right">
           <div className="flow-sankey__right-head">
-            <strong className="flow-sankey__year">2025년</strong>
-            <span>(명)</span>
+            <strong className="flow-sankey__year">{copy.currentYear}</strong>
+            <span>{copy.unitLabel}</span>
           </div>
           <div className="flow-sankey__right-grid">
             <div className="flow-sankey__node-stack">

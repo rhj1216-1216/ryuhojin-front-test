@@ -107,10 +107,10 @@ export const dashboardPayload: DashboardPayload = {
     },
   ],
   chartCategoryShare: [
-    { name: 'ECharts 기반', value: 58 },
-    { name: '마크업 기반', value: 18 },
-    { name: '공통 처리', value: 16 },
-    { name: '트러블슈팅', value: 8 },
+    { name: 'ECharts based', value: 58 },
+    { name: 'Markup based', value: 18 },
+    { name: 'Shared handling', value: 16 },
+    { name: 'Troubleshooting', value: 8 },
   ],
   qualityPoints: [
     { feature: 'Chart builder', team: 'Platform', cycleTimeDays: 7, defectRate: 1.8, complexity: 8 },

@@ -17,11 +17,58 @@ interface ChartShowcaseSectionProps {
     title: string;
     description: string;
   };
+  chartCards: {
+    businessTrend: {
+      title: string;
+      description: string;
+      ariaLabel: string;
+      fallbackDescription: string;
+    };
+    implementationTrend: {
+      title: string;
+      description: string;
+      ariaLabel: string;
+      fallbackDescription: string;
+    };
+    capabilityTreemap: {
+      title: string;
+      description: string;
+      ariaLabel: string;
+      fallbackDescription: string;
+    };
+    categoryShare: {
+      title: string;
+      description: string;
+      ariaLabel: string;
+      fallbackDescription: string;
+    };
+    sankey: {
+      title: string;
+      description: string;
+    };
+  };
+  sankeyCopy: {
+    ariaLabel: string;
+    legendLabel: string;
+    fallbackDescription: string;
+    previousYear: string;
+    currentYear: string;
+    unitLabel: string;
+    legendItems: {
+      veryImproved: string;
+      improved: string;
+      noChange: string;
+      worsened: string;
+      veryWorsened: string;
+    };
+  };
   payload: DashboardPayload;
 }
 
 export const ChartShowcaseSection = ({
   section,
+  chartCards,
+  sankeyCopy,
   payload,
 }: ChartShowcaseSectionProps) => {
   const chartData = useChartShowcaseData(payload);
@@ -35,51 +82,51 @@ export const ChartShowcaseSection = ({
     >
       <div className="grid grid--2 chart-grid">
         <Card
-          title="Bar + Line"
-          description="월별 지표와 전환율을 하나의 option builder에서 생성합니다."
+          title={chartCards.businessTrend.title}
+          description={chartCards.businessTrend.description}
         >
           <EChart
             option={buildBusinessTrendOption(chartData.businessTrend)}
-            ariaLabel="Monthly revenue, active users, and conversion rate chart"
-            fallbackDescription="월별 지표를 막대와 라인으로 함께 비교하는 차트입니다."
+            ariaLabel={chartCards.businessTrend.ariaLabel}
+            fallbackDescription={chartCards.businessTrend.fallbackDescription}
           />
         </Card>
         <Card
-          title="Portfolio Chart Trend"
-          description="전년도 비교 막대와 리뷰 점수를 함께 보여주고, 긴 데이터는 dataZoom으로 탐색합니다."
+          title={chartCards.implementationTrend.title}
+          description={chartCards.implementationTrend.description}
         >
           <EChart
             option={buildImplementationTrendOption(chartData.implementationTrend)}
-            ariaLabel="Portfolio chart implementation trend chart"
-            fallbackDescription="이전 값과 현재 값을 비교하고 리뷰 점수를 라인으로 표시하는 복합 차트입니다."
+            ariaLabel={chartCards.implementationTrend.ariaLabel}
+            fallbackDescription={chartCards.implementationTrend.fallbackDescription}
           />
         </Card>
         <Card
-          title="Capability Treemap"
-          description="차트 아카이브의 구현 영역을 크기와 색상 강도로 재구성한 treemap 예제입니다."
+          title={chartCards.capabilityTreemap.title}
+          description={chartCards.capabilityTreemap.description}
         >
           <EChart
             option={buildCapabilityTreemapOption(chartData.capabilityTree)}
-            ariaLabel="Portfolio visualization capability treemap"
-            fallbackDescription="ECharts, 마크업 차트, 공통 UX 항목의 비중을 treemap으로 표시합니다."
+            ariaLabel={chartCards.capabilityTreemap.ariaLabel}
+            fallbackDescription={chartCards.capabilityTreemap.fallbackDescription}
           />
         </Card>
         <Card
-          title="Chart Category Share"
-          description="범례와 라벨이 있는 pie chart로 차트 예제 분포를 요약합니다."
+          title={chartCards.categoryShare.title}
+          description={chartCards.categoryShare.description}
         >
           <EChart
             option={buildCategoryShareOption(chartData.categoryShare)}
-            ariaLabel="Chart category share pie chart"
-            fallbackDescription="차트 예제 카테고리별 비율을 도넛 차트로 표시합니다."
+            ariaLabel={chartCards.categoryShare.ariaLabel}
+            fallbackDescription={chartCards.categoryShare.fallbackDescription}
           />
         </Card>
         <Card
           className="chart-card--wide"
-          title="커스텀 컴포넌트 + Sankey Flow"
-          description="전년 대비 판정현황 화면을 참고해 좌우 상태 막대와 흐름선, 범례, 수치를 분리해 구성했습니다."
+          title={chartCards.sankey.title}
+          description={chartCards.sankey.description}
         >
-          <FlowSankeyChart workflow={chartData.workflow} />
+          <FlowSankeyChart workflow={chartData.workflow} copy={sankeyCopy} />
         </Card>
       </div>
     </Section>
