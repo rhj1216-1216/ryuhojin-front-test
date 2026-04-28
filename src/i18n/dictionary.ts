@@ -83,6 +83,23 @@ interface DashboardDictionary {
     selectedLabel: (count: number) => string;
     editModeLabel: string;
     editModeNote: string;
+    cancelLabel: string;
+    saveLabel: string;
+    addRowLabel: string;
+    addChildLabel: string;
+    deleteSelectedLabel: string;
+    newRowLabel: string;
+    newChildLabel: string;
+    newRowPlaceholder: {
+      capability: string;
+      category: string;
+      owner: string;
+      coverage: string;
+    };
+    newChildPlaceholder: {
+      name: string;
+      owner: string;
+    };
     clearLabel: string;
     expandLabel: string;
     collapseLabel: string;
@@ -153,7 +170,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
         fallbackDescription: 'ECharts, 마크업 차트, 공통 UX 항목의 비중을 treemap으로 표시합니다.',
       },
       categoryShare: {
-        title: 'Chart Category Share',
+        title: '파이 차트',
         description: '범례와 라벨이 있는 pie chart로 차트 예제 분포를 요약합니다.',
         ariaLabel: '차트 카테고리 비율 pie chart',
         fallbackDescription: '차트 예제 카테고리별 비율을 도넛 차트로 표시합니다.',
@@ -208,7 +225,24 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
       allCategoriesLabel: '전체 카테고리',
       selectedLabel: (count) => `${count}개 선택`,
       editModeLabel: '수정 모드',
-      editModeNote: '수정 모드: 헤더 체크로 현재 목록을 전체 선택할 수 있습니다.',
+      editModeNote: '수정 모드: 리스트를 수정 해서 저장 할수 있습니다.',
+      cancelLabel: '취소',
+      saveLabel: '저장',
+      addRowLabel: '추가',
+      addChildLabel: '추가',
+      deleteSelectedLabel: '선택 삭제',
+      newRowLabel: '신규',
+      newChildLabel: '하위 추가',
+      newRowPlaceholder: {
+        capability: '새 역량',
+        category: '카테고리',
+        owner: '담당자',
+        coverage: '0',
+      },
+      newChildPlaceholder: {
+        name: '하위 작업',
+        owner: '담당자',
+      },
       clearLabel: 'Clear',
       expandLabel: 'Expand',
       collapseLabel: 'Collapse',
@@ -314,7 +348,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
           'A treemap showing the share of ECharts, markup charts, and shared UX work.',
       },
       categoryShare: {
-        title: 'Chart Category Share',
+        title: 'Pie Chart',
         description: 'A pie chart with legend and labels summarizes the chart example mix.',
         ariaLabel: 'Chart category share pie chart',
         fallbackDescription: 'A donut chart showing the share of chart example categories.',
@@ -369,7 +403,24 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
       allCategoriesLabel: 'All categories',
       selectedLabel: (count) => `${count} selected`,
       editModeLabel: 'Edit mode',
-      editModeNote: 'Edit mode: use the header checkbox to select all visible rows.',
+      editModeNote: 'Edit mode: update the list and save your changes.',
+      cancelLabel: 'Cancel',
+      saveLabel: 'Save',
+      addRowLabel: 'Add',
+      addChildLabel: 'Add',
+      deleteSelectedLabel: 'Delete selected',
+      newRowLabel: 'New',
+      newChildLabel: 'New child',
+      newRowPlaceholder: {
+        capability: 'New capability',
+        category: 'Category',
+        owner: 'Owner',
+        coverage: '0',
+      },
+      newChildPlaceholder: {
+        name: 'Child task',
+        owner: 'Owner',
+      },
       clearLabel: 'Clear',
       expandLabel: 'Expand',
       collapseLabel: 'Collapse',

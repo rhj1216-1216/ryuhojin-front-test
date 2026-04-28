@@ -55,7 +55,12 @@ const App = () => {
       <section className="profile-hero" aria-labelledby="hero-title" data-reveal>
         <div className="profile-hero__content">
           <p className="eyebrow">Frontend Portfolio</p>
-          <h1 id="hero-title">{t.heroTitle}</h1>
+          <h1
+            id="hero-title"
+            className={locale === 'ko' ? 'profile-hero__title--ko' : undefined}
+          >
+            {t.heroTitle}
+          </h1>
           <p>{t.heroBody}</p>
 
           <div className="profile-hero__actions">

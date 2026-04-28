@@ -29,12 +29,12 @@ interface FlowSankeyChartProps {
 }
 
 const nodeLabel: Record<string, string> = {
-  A: 'A',
-  C: 'C',
-  D2: 'D2',
-  'A-1': 'A',
-  'C-1': 'C',
-  'D2-1': 'D2',
+  A: '좋음',
+  C: '보통',
+  D2: '나쁨',
+  'A-1': '좋음',
+  'C-1': '보통',
+  'D2-1': '나쁨',
 };
 
 const numberFormatter = new Intl.NumberFormat('ko-KR');

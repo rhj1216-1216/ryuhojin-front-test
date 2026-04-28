@@ -10,8 +10,17 @@ import type {
 
 const axisTextColor = '#64717f';
 const splitLineColor = '#e4eaf0';
+const roundedBarTopRadius = [20, 20, 0, 0];
+const squareBarRadius = [0, 0, 0, 0];
 export const workflowSourceOrder = ['A', 'C', 'D2'] as const;
 export const workflowTargetOrder = ['A-1', 'C-1', 'D2-1'] as const;
+
+export type ChartLegendSelection = Record<string, boolean>;
+
+interface StackedBarSeries {
+  name: string;
+  values: number[];
+}
 
 export const judgmentFlowColors = {
   veryImproved: '#4f8df7',
@@ -35,65 +44,149 @@ export const getWorkflowLinkColor = (source: string, target: string) => {
   return judgmentFlowColors.noChange;
 };
 
+const isLegendItemVisible = (
+  legendSelection: ChartLegendSelection | undefined,
+  name: string,
+) => legendSelection?.[name] !== false;
+
+const isVisibleStackTop = (
+  stack: StackedBarSeries[],
+  seriesIndex: number,
+  dataIndex: number,
+  legendSelection?: ChartLegendSelection,
+) => {
+  const currentSeries = stack[seriesIndex];
+
+  if (
+    currentSeries.values[dataIndex] === 0 ||
+    !isLegendItemVisible(legendSelection, currentSeries.name)
+  ) {
+    return false;
+  }
+
+  return stack
+    .slice(seriesIndex + 1)
+    .every(
+      (series) =>
+        series.values[dataIndex] === 0 ||
+        !isLegendItemVisible(legendSelection, series.name),
+    );
+};
+
+const buildStackedBarData = (
+  stack: StackedBarSeries[],
+  seriesIndex: number,
+  legendSelection?: ChartLegendSelection,
+) =>
+  stack[seriesIndex].values.map((value, dataIndex) => ({
+    value,
+    itemStyle: {
+      borderRadius: isVisibleStackTop(stack, seriesIndex, dataIndex, legendSelection)
+        ? roundedBarTopRadius
+        : squareBarRadius,
+    },
+  }));
+
+const formatPieTooltip = (params: unknown) => {
+  if (
+    typeof params === 'object' &&
+    params !== null &&
+    'name' in params &&
+    'value' in params
+  ) {
+    const { name, value } = params;
+
+    return `${String(name)}: ${String(value)}`;
+  }
+
+  return '';
+};
+
+const formatChartValue = (value: number) =>
+  new Intl.NumberFormat('en-US').format(value);
+
 export const buildBusinessTrendOption = (
   metrics: MonthlyBusinessMetric[],
-): EChartsOption => ({
-  aria: { enabled: true },
-  color: ['#2563eb', '#0f766e', '#b45309'],
-  tooltip: { trigger: 'axis' },
-  legend: {
-    top: 0,
-    textStyle: { color: axisTextColor },
-  },
-  grid: {
-    left: 42,
-    right: 48,
-    top: 52,
-    bottom: 34,
-  },
-  xAxis: {
-    type: 'category',
-    data: metrics.map((metric) => metric.month),
-    axisLabel: { color: axisTextColor },
-    axisLine: { lineStyle: { color: splitLineColor } },
-  },
-  yAxis: [
-    {
-      type: 'value',
-      name: 'Revenue',
-      axisLabel: { color: axisTextColor },
-      splitLine: { lineStyle: { color: splitLineColor } },
-    },
-    {
-      type: 'value',
-      name: 'Conversion',
-      axisLabel: { color: axisTextColor },
-      splitLine: { show: false },
-    },
-  ],
-  series: [
+  legendSelection?: ChartLegendSelection,
+): EChartsOption => {
+  const businessStack = [
     {
       name: 'Revenue index',
-      type: 'bar',
-      barWidth: 18,
-      data: metrics.map((metric) => metric.revenue),
+      values: metrics.map((metric) => metric.revenue),
     },
     {
       name: 'Active users',
-      type: 'bar',
-      barWidth: 18,
-      data: metrics.map((metric) => metric.activeUsers),
+      values: metrics.map((metric) => metric.activeUsers),
     },
-    {
-      name: 'Conversion rate',
-      type: 'line',
-      yAxisIndex: 1,
-      smooth: true,
-      symbolSize: 8,
-      data: metrics.map((metric) => metric.conversionRate),
+  ];
+
+  return {
+    aria: { enabled: true },
+    color: ['#2563eb', '#0f766e', '#b45309'],
+    tooltip: { trigger: 'axis' },
+    legend: {
+      top: 0,
+      selected: legendSelection,
+      textStyle: { color: axisTextColor },
     },
-  ],
-});
+    grid: {
+      left: 42,
+      right: 48,
+      top: 52,
+      bottom: 34,
+    },
+    xAxis: {
+      type: 'category',
+      data: metrics.map((metric) => metric.month),
+      axisLabel: { color: axisTextColor },
+      axisLine: { lineStyle: { color: splitLineColor } },
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: 'Revenue',
+        axisLabel: { color: axisTextColor },
+        splitLine: { lineStyle: { color: splitLineColor } },
+      },
+      {
+        type: 'value',
+        name: 'Conversion',
+        axisLabel: { color: axisTextColor },
+        splitLine: { show: false },
+      },
+    ],
+    series: [
+      {
+        name: 'Revenue index',
+        type: 'bar',
+        stack: 'monthlyMetrics',
+        barWidth: 18,
+        itemStyle: {
+          color: '#2563eb',
+        },
+        data: buildStackedBarData(businessStack, 0, legendSelection),
+      },
+      {
+        name: 'Active users',
+        type: 'bar',
+        stack: 'monthlyMetrics',
+        barWidth: 18,
+        itemStyle: {
+          color: '#0f766e',
+        },
+        data: buildStackedBarData(businessStack, 1, legendSelection),
+      },
+      {
+        name: 'Conversion rate',
+        type: 'line',
+        yAxisIndex: 1,
+        smooth: true,
+        symbolSize: 8,
+        data: metrics.map((metric) => metric.conversionRate),
+      },
+    ],
+  };
+};
 
 export const buildImplementationTrendOption = (
   metrics: ChartImplementationMetric[],
@@ -164,7 +257,7 @@ export const buildImplementationTrendOption = (
         borderColor: '#2563eb',
         borderType: 'dashed',
         borderWidth: 1,
-        borderRadius: [8, 8, 8, 8],
+        borderRadius: roundedBarTopRadius,
       },
       data: metrics.map((metric) => metric.previous),
     },
@@ -173,7 +266,7 @@ export const buildImplementationTrendOption = (
       type: 'bar',
       barWidth: 16,
       itemStyle: {
-        borderRadius: [8, 8, 8, 8],
+        borderRadius: roundedBarTopRadius,
       },
       data: metrics.map((metric) => metric.current),
     },
@@ -337,36 +430,110 @@ export const buildCapabilityTreemapOption = (
 
 export const buildCategoryShareOption = (
   shares: ChartCategoryShare[],
-): EChartsOption => ({
-  aria: { enabled: true },
-  color: ['#0f766e', '#2563eb', '#b45309', '#be123c'],
-  tooltip: { trigger: 'item' },
-  legend: {
-    orient: 'vertical',
-    right: 0,
-    top: 'middle',
-    textStyle: { color: axisTextColor },
-  },
-  series: [
-    {
-      name: 'Chart archive',
-      type: 'pie',
-      radius: ['42%', '68%'],
-      center: ['38%', '52%'],
-      avoidLabelOverlap: true,
-      label: {
-        formatter: '{b}\n{d}%',
-        color: '#27323a',
-        fontWeight: 700,
-      },
-      labelLine: {
-        length: 10,
-        length2: 8,
-      },
-      data: shares,
+): EChartsOption => {
+  const activeSliceCount = shares.filter((share) => Number(share.value) > 0).length;
+  const shareValueByName = new Map(
+    shares.map((share) => [share.name, formatChartValue(share.value)]),
+  );
+
+  return {
+    aria: { enabled: true },
+    color: ['#4f8df7', '#e4499a', '#0f766e', '#b45309'],
+    tooltip: {
+      trigger: 'item',
+      formatter: formatPieTooltip,
     },
-  ],
-});
+    legend: {
+      top: 0,
+      left: 'center',
+      icon: 'circle',
+      itemWidth: 7,
+      itemHeight: 7,
+      itemGap: 16,
+      backgroundColor: '#f4f6fb',
+      borderRadius: 8,
+      padding: [10, 14],
+      formatter: (name: string) =>
+        `{name|${name}}  {value|${shareValueByName.get(name) ?? ''}}`,
+      textStyle: {
+        color: '#27323a',
+        fontSize: 12,
+        rich: {
+          name: {
+            color: '#27323a',
+            fontSize: 12,
+            fontWeight: 500,
+          },
+          value: {
+            color: '#111827',
+            fontSize: 15,
+            fontWeight: 900,
+          },
+        },
+      },
+    },
+    graphic: {
+      type: 'text',
+      left: 'center',
+      top: '55%',
+      z: 10,
+      silent: true,
+      style: {
+        text: 'Example',
+        align: 'center',
+        fill: '#27323a',
+        fontSize: 20,
+        fontWeight: 600,
+      },
+    },
+    series: [
+      {
+        name: 'Chart archive',
+        type: 'pie',
+        radius: ['38%', '72%'],
+        center: ['50%', '58%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 1,
+          borderColor: '#ffffff',
+          borderWidth: activeSliceCount === 1 ? 0 : 2,
+        },
+        label: {
+          show: true,
+          position: 'inside',
+          formatter: ({ percent }: { percent?: number }) =>
+            Number(percent) >= 3 ? `${Math.round(Number(percent))}%` : '',
+          color: '#ffffff',
+          align: 'center',
+          fontSize: 14,
+          fontWeight: 400,
+        },
+        labelLine: {
+          show: false,
+        },
+        emphasis: {
+          scale: false,
+          focus: 'self',
+          itemStyle: {
+            opacity: 1,
+          },
+          label: {
+            show: true,
+          },
+          labelLine: {
+            show: false,
+          },
+        },
+        blur: {
+          itemStyle: {
+            opacity: 0.4,
+          },
+        },
+        data: shares,
+      },
+    ],
+  };
+};
 
 export const buildWorkflowSankeyOption = (
   workflow: WorkflowSankeyData,
