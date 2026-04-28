@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import type { DashboardPayload } from '../../types/dashboard';
 import {
   buildCapabilityTreemapOption,
   buildCategoryShareOption,
   buildBusinessTrendOption,
   buildImplementationTrendOption,
+  type ChartLegendSelection,
 } from '../../features/charts/chartOptions';
 import { EChart } from '../../features/charts/EChart';
 import { FlowSankeyChart } from '../../features/charts/FlowSankeyChart';
@@ -72,6 +74,8 @@ export const ChartShowcaseSection = ({
   payload,
 }: ChartShowcaseSectionProps) => {
   const chartData = useChartShowcaseData(payload);
+  const [businessTrendLegendSelection, setBusinessTrendLegendSelection] =
+    useState<ChartLegendSelection>({});
 
   return (
     <Section
@@ -86,9 +90,13 @@ export const ChartShowcaseSection = ({
           description={chartCards.businessTrend.description}
         >
           <EChart
-            option={buildBusinessTrendOption(chartData.businessTrend)}
+            option={buildBusinessTrendOption(
+              chartData.businessTrend,
+              businessTrendLegendSelection,
+            )}
             ariaLabel={chartCards.businessTrend.ariaLabel}
             fallbackDescription={chartCards.businessTrend.fallbackDescription}
+            onLegendSelectChanged={setBusinessTrendLegendSelection}
           />
         </Card>
         <Card

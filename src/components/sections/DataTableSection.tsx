@@ -32,6 +32,23 @@ interface DataTableSectionProps {
     selectedLabel: (count: number) => string;
     editModeLabel: string;
     editModeNote: string;
+    cancelLabel: string;
+    saveLabel: string;
+    addRowLabel: string;
+    addChildLabel: string;
+    deleteSelectedLabel: string;
+    newRowLabel: string;
+    newChildLabel: string;
+    newRowPlaceholder: {
+      capability: string;
+      category: string;
+      owner: string;
+      coverage: string;
+    };
+    newChildPlaceholder: {
+      name: string;
+      owner: string;
+    };
     clearLabel: string;
     expandLabel: string;
     collapseLabel: string;
