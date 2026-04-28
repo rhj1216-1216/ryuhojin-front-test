@@ -11,6 +11,8 @@ import { useScrollReveal } from './hooks/useScrollReveal';
 import { useDashboardViewModel } from './hooks/useDashboardViewModel';
 import type { Locale } from './types/dashboard';
 
+const portfolioUrl = 'https://www.notion.so/329efa9a0f5f805ab6ecc52d4266a590';
+
 const App = () => {
   const [locale, setLocale] = useState<Locale>('ko');
   const t = dictionary[locale];
@@ -66,6 +68,14 @@ const App = () => {
           <div className="profile-hero__actions">
             <a className="button" href="#charts">
               {heroCtaLabel}
+            </a>
+            <a
+              className="button button--ghost"
+              href={portfolioUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Notion Portfolio
             </a>
             <button
               className="button button--ghost"

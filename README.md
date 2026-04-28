@@ -1,5 +1,7 @@
 # Frontend Portfolio Dashboard
 
+Notion Portfolio: https://www.notion.so/329efa9a0f5f805ab6ecc52d4266a590
+
 React + TypeScript 기반의 실무형 포트폴리오 데모 앱입니다. 단순 소개 페이지가 아니라 mock API, custom hook, ECharts option builder, 데이터 테이블, timeline 예제를 포함한 동작 가능한 대시보드 형태로 구성했습니다.
 
 > 실제 프로젝트 경험을 바탕으로 재구성한 더미 예시이며, 실제 회사 데이터나 실제 회사 코드는 포함하지 않습니다.
