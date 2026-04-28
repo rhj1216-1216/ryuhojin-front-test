@@ -314,6 +314,7 @@ const TimelineShell = styled.div`
 
   .rct-item {
     border-radius: 8px;
+    overflow: visible !important;
   }
 
   .timeline-group-label {
@@ -329,34 +330,106 @@ const TimelineShell = styled.div`
   }
 
   .timeline-item {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 6px;
-    align-items: center;
+    position: relative;
+    display: block;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
     border: 1px solid transparent;
     border-radius: 8px;
-    padding: 0 7px;
+    padding: 0;
+  }
+
+  .timeline-item__content {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    z-index: 2;
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    width: max-content;
+    max-width: 260px;
+    color: #172026;
+    pointer-events: none;
+    transform: translateY(-50%);
   }
 
   .timeline-item__title {
-    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .timeline-item__progress {
-    font-size: 0.72rem;
+    color: #172026;
+    font-size: 0.78rem;
     font-weight: 900;
   }
 
+  .timeline-item__progress {
+    color: #27323a;
+    font-size: 0.72rem;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
   .timeline-item__resize {
-    width: 6px;
-    height: 70%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 4;
+    width: 10px;
+    height: 100%;
+    border-radius: 0;
+    background: transparent;
+    cursor: ew-resize;
+  }
+
+  .timeline-item__resize.rct-item-handler-left {
+    left: -5px !important;
+  }
+
+  .timeline-item__resize.rct-item-handler-right {
+    right: -5px !important;
+  }
+
+  .timeline-item__resize:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.82);
+    outline-offset: -2px;
+  }
+
+  .timeline-today-marker {
+    z-index: 60 !important;
+    overflow: visible;
+    background: transparent !important;
+    background-color: transparent !important;
+    pointer-events: none;
+  }
+
+  .timeline-today-marker__line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -1px;
+    width: 2px;
+    background: #be123c;
+    box-shadow: 0 0 0 1px rgba(190, 18, 60, 0.16);
+  }
+
+  .timeline-today-marker__label {
+    position: absolute;
+    top: 7px;
+    left: 0;
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.78);
+    background: #be123c;
+    color: #ffffff;
+    padding: 3px 8px;
+    font-size: 0.72rem;
+    font-weight: 900;
+    line-height: 1;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(190, 18, 60, 0.24);
+    transform: translateX(-50%);
   }
 `;
 
@@ -513,9 +586,9 @@ export const RoadmapTimeline = ({ groups, items, copy }: RoadmapTimelineProps) =
         rightClassName: 'timeline-item__resize',
       });
       const itemStyle: CSSProperties = {
-        background: itemContext.selected ? '#172026' : statusColor[item.status],
+        background: itemContext.selected ? '#dfe7ef' : statusColor[item.status],
         borderColor: itemContext.resizing ? '#be123c' : statusColor[item.status],
-        color: '#ffffff',
+        color: '#172026',
       };
 
       return (
@@ -525,8 +598,10 @@ export const RoadmapTimeline = ({ groups, items, copy }: RoadmapTimelineProps) =
           ) : (
             <span aria-hidden="true" />
           )}
-          <span className="timeline-item__title">{itemContext.title}</span>
-          <span className="timeline-item__progress">{item.progress}%</span>
+          <span className="timeline-item__content">
+            <span className="timeline-item__title">{itemContext.title}</span>
+            <span className="timeline-item__progress">{item.progress}%</span>
+          </span>
           {itemContext.useResizeHandle && resizeProps.right ? (
             <div {...resizeProps.right} />
           ) : null}
@@ -547,6 +622,9 @@ export const RoadmapTimeline = ({ groups, items, copy }: RoadmapTimelineProps) =
   );
 
   const visibleCount = editableItems.filter((item) => item.isVisible).length;
+  const currentVisibleSpan = visibleTime.end - visibleTime.start;
+  const isMaxZoomedIn = currentVisibleSpan <= minZoom * 1.02;
+  const markerLabel = isMaxZoomedIn ? 'Now' : 'Today';
 
   return (
     <TimelineWorkbench>
@@ -726,9 +804,15 @@ export const RoadmapTimeline = ({ groups, items, copy }: RoadmapTimelineProps) =
               <DateHeader />
             </TimelineHeaders>
             <TimelineMarkers>
-              <TodayMarker date={Date.now()}>
+              <TodayMarker key={markerLabel} date={Date.now()} interval={1000}>
                 {({ styles }) => (
-                  <div style={{ ...styles, width: 2, background: '#172026' }} />
+                  <div
+                    className="timeline-today-marker"
+                    style={{ ...styles, width: 0, backgroundColor: 'transparent' }}
+                  >
+                    <span className="timeline-today-marker__line" aria-hidden="true" />
+                    <span className="timeline-today-marker__label">{markerLabel}</span>
+                  </div>
                 )}
               </TodayMarker>
             </TimelineMarkers>
