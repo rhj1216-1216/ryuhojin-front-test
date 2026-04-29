@@ -31,6 +31,8 @@ ECharts 인스턴스 생성, resize, dispose는 `EChart` wrapper가 담당합니
 
 - Bar + Line 복합 차트
 - dataZoom을 포함한 전년도 비교 복합 차트
+- Scatter 기반 품질/복잡도 비교 차트
+- Boxplot 기반 성별/그룹별 분포 비교 차트
 - Pie 기반 카테고리 분포 차트
 - Treemap 기반 구현 영역 차트
 - 커스텀 UI와 결합한 Sankey flow 차트

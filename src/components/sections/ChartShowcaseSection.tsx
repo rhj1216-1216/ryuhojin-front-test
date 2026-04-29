@@ -10,7 +10,9 @@ import {
   buildCapabilityTreemapOption,
   buildCategoryShareOption,
   buildBusinessTrendOption,
+  buildGenderBoxPlotOption,
   buildImplementationTrendOption,
+  buildQualityScatterOption,
   type ChartLegendSelection,
 } from '../../features/charts/chartOptions';
 import { EChart } from '../../features/charts/EChart';
@@ -24,6 +26,8 @@ interface ChartShowcaseSectionProps {
   chartCards: {
     businessTrend: ChartCardCopy;
     implementationTrend: ChartCardCopy;
+    qualityScatter: ChartCardCopy;
+    genderBoxPlot: ChartCardCopy;
     capabilityTreemap: ChartCardCopy;
     categoryShare: ChartCardCopy;
     sankey: {
@@ -45,6 +49,8 @@ export const ChartShowcaseSection = ({
 }: ChartShowcaseSectionProps) => {
   const chartData = useChartShowcaseData(payload);
   const [businessTrendLegendSelection, setBusinessTrendLegendSelection] =
+    useState<ChartLegendSelection>({});
+  const [genderBoxPlotLegendSelection, setGenderBoxPlotLegendSelection] =
     useState<ChartLegendSelection>({});
 
   return (
@@ -91,6 +97,34 @@ export const ChartShowcaseSection = ({
             option={buildCapabilityTreemapOption(chartData.capabilityTree)}
             ariaLabel={chartCards.capabilityTreemap.ariaLabel}
             fallbackDescription={chartCards.capabilityTreemap.fallbackDescription}
+          />
+        </Card>
+        <Card
+          title={chartCards.qualityScatter.title}
+          description={chartCards.qualityScatter.description}
+        >
+          <EChart
+            option={buildQualityScatterOption(
+              chartData.qualityDistribution,
+              chartOptionLabels.qualityScatter,
+            )}
+            ariaLabel={chartCards.qualityScatter.ariaLabel}
+            fallbackDescription={chartCards.qualityScatter.fallbackDescription}
+          />
+        </Card>
+        <Card
+          title={chartCards.genderBoxPlot.title}
+          description={chartCards.genderBoxPlot.description}
+        >
+          <EChart
+            option={buildGenderBoxPlotOption(
+              chartData.genderBoxPlot,
+              chartOptionLabels.genderBoxPlot,
+              genderBoxPlotLegendSelection,
+            )}
+            ariaLabel={chartCards.genderBoxPlot.ariaLabel}
+            fallbackDescription={chartCards.genderBoxPlot.fallbackDescription}
+            onLegendSelectChanged={setGenderBoxPlotLegendSelection}
           />
         </Card>
         <Card

@@ -1,4 +1,5 @@
 import type {
+  GenderBoxPlotGender,
   KpiMetric,
   Locale,
   NavigationItem,
@@ -61,6 +62,20 @@ export interface ChartOptionLabels {
     complexityHigh: string;
     complexityLow: string;
     seriesName: string;
+  };
+  genderBoxPlot: {
+    valueAxis: string;
+    seriesName: string;
+    numberLocale: string;
+    genderLabels: Record<GenderBoxPlotGender, string>;
+    statsLabels: {
+      min: string;
+      q1: string;
+      median: string;
+      q3: string;
+      max: string;
+      outlier: string;
+    };
   };
   categoryShare: {
     centerLabel: string;
@@ -181,6 +196,8 @@ export interface DashboardDictionary {
   chartCards: {
     businessTrend: ChartCardCopy;
     implementationTrend: ChartCardCopy;
+    qualityScatter: ChartCardCopy;
+    genderBoxPlot: ChartCardCopy;
     capabilityTreemap: ChartCardCopy;
     categoryShare: ChartCardCopy;
     sankey: {
@@ -250,6 +267,22 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
         ariaLabel: '포트폴리오 차트 구현 추이',
         fallbackDescription: '이전 값과 현재 값을 비교하고 리뷰 점수를 라인으로 표시하는 복합 차트입니다.',
       },
+      qualityScatter: {
+        title: 'Quality Scatter',
+        description:
+          '처리 기간, 결함률, 복잡도를 scatter chart와 visualMap으로 함께 비교합니다.',
+        ariaLabel: '기능 품질과 복잡도 scatter chart',
+        fallbackDescription:
+          '각 기능의 처리 기간, 결함률, 복잡도를 점 위치와 색상으로 비교하는 산점도입니다.',
+      },
+      genderBoxPlot: {
+        title: 'Gender Box Plot',
+        description:
+          '성별과 연령 그룹별 분포를 boxplot과 outlier 점으로 비교하는 더미 예제입니다.',
+        ariaLabel: '성별과 연령 그룹별 분포 boxplot chart',
+        fallbackDescription:
+          '성별과 연령 그룹별 최솟값, 사분위수, 중앙값, 최댓값, 이상치를 비교하는 boxplot 차트입니다.',
+      },
       capabilityTreemap: {
         title: 'Capability Treemap',
         description: '차트 아카이브의 구현 영역을 크기와 색상 강도로 재구성한 treemap 예제입니다.',
@@ -289,6 +322,23 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
         complexityHigh: '높은 복잡도',
         complexityLow: '낮음',
         seriesName: '기능 품질',
+      },
+      genderBoxPlot: {
+        valueAxis: '지표값',
+        seriesName: '성별 분포',
+        numberLocale: 'ko-KR',
+        genderLabels: {
+          Male: '남성',
+          Female: '여성',
+        },
+        statsLabels: {
+          min: '최솟값',
+          q1: '1사분위',
+          median: '중앙값',
+          q3: '3사분위',
+          max: '최댓값',
+          outlier: '이상치',
+        },
       },
       categoryShare: {
         centerLabel: '예제',
@@ -433,7 +483,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
         eyebrow: 'ECharts Showcase',
         title: 'ECharts 차트 아카이브 데모',
         description:
-          '포트폴리오의 차트 공통화 경험을 바탕으로 bar+line, dataZoom, pie, treemap, sankey 예제를 구성했습니다.',
+          '포트폴리오의 차트 공통화 경험을 바탕으로 bar+line, dataZoom, scatter, boxplot, pie, treemap, sankey 예제를 구성했습니다.',
       },
       timeline: {
         eyebrow: 'Roadmap',
@@ -509,6 +559,22 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
         fallbackDescription:
           'A mixed chart comparing previous and current values with review scores as a line.',
       },
+      qualityScatter: {
+        title: 'Quality Scatter',
+        description:
+          'Cycle time, defect rate, and complexity are compared with a scatter chart and visualMap.',
+        ariaLabel: 'Feature quality and complexity scatter chart',
+        fallbackDescription:
+          'A scatter chart comparing each feature by cycle time, defect rate, and complexity.',
+      },
+      genderBoxPlot: {
+        title: 'Gender Box Plot',
+        description:
+          'A dummy boxplot example comparing distributions by gender and age group with outlier points.',
+        ariaLabel: 'Gender and age group distribution boxplot chart',
+        fallbackDescription:
+          'A boxplot chart comparing minimum, quartiles, median, maximum, and outliers by gender and age group.',
+      },
       capabilityTreemap: {
         title: 'Capability Treemap',
         description:
@@ -550,6 +616,23 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
         complexityHigh: 'High complexity',
         complexityLow: 'Low',
         seriesName: 'Feature quality',
+      },
+      genderBoxPlot: {
+        valueAxis: 'Value',
+        seriesName: 'Gender distribution',
+        numberLocale: 'en-US',
+        genderLabels: {
+          Male: 'Male',
+          Female: 'Female',
+        },
+        statsLabels: {
+          min: 'Min',
+          q1: 'Q1',
+          median: 'Median',
+          q3: 'Q3',
+          max: 'Max',
+          outlier: 'Outlier',
+        },
       },
       categoryShare: {
         centerLabel: 'Example',
@@ -694,7 +777,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
         eyebrow: 'ECharts Showcase',
         title: 'ECharts Archive Demo',
         description:
-          'Bar+line, dataZoom, pie, treemap, and sankey examples share a wrapper and option-builder pattern.',
+          'Bar+line, dataZoom, scatter, boxplot, pie, treemap, and sankey examples share a wrapper and option-builder pattern.',
       },
       timeline: {
         eyebrow: 'Roadmap',
