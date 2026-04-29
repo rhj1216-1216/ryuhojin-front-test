@@ -1,4 +1,5 @@
 import type { EChartsOption } from 'echarts';
+import type { ChartOptionLabels } from '../../i18n/dictionary';
 import type {
   ChartCapabilityNode,
   ChartCategoryShare,
@@ -102,20 +103,18 @@ const formatPieTooltip = (params: unknown) => {
   return '';
 };
 
-const formatChartValue = (value: number) =>
-  new Intl.NumberFormat('en-US').format(value);
-
 export const buildBusinessTrendOption = (
   metrics: MonthlyBusinessMetric[],
+  labels: ChartOptionLabels['businessTrend'],
   legendSelection?: ChartLegendSelection,
 ): EChartsOption => {
   const businessStack = [
     {
-      name: 'Revenue index',
+      name: labels.revenueIndex,
       values: metrics.map((metric) => metric.revenue),
     },
     {
-      name: 'Active users',
+      name: labels.activeUsers,
       values: metrics.map((metric) => metric.activeUsers),
     },
   ];
@@ -144,20 +143,20 @@ export const buildBusinessTrendOption = (
     yAxis: [
       {
         type: 'value',
-        name: 'Revenue',
+        name: labels.revenueAxis,
         axisLabel: { color: axisTextColor },
         splitLine: { lineStyle: { color: splitLineColor } },
       },
       {
         type: 'value',
-        name: 'Conversion',
+        name: labels.conversionAxis,
         axisLabel: { color: axisTextColor },
         splitLine: { show: false },
       },
     ],
     series: [
       {
-        name: 'Revenue index',
+        name: labels.revenueIndex,
         type: 'bar',
         stack: 'monthlyMetrics',
         barWidth: 18,
@@ -167,7 +166,7 @@ export const buildBusinessTrendOption = (
         data: buildStackedBarData(businessStack, 0, legendSelection),
       },
       {
-        name: 'Active users',
+        name: labels.activeUsers,
         type: 'bar',
         stack: 'monthlyMetrics',
         barWidth: 18,
@@ -177,7 +176,7 @@ export const buildBusinessTrendOption = (
         data: buildStackedBarData(businessStack, 1, legendSelection),
       },
       {
-        name: 'Conversion rate',
+        name: labels.conversionRate,
         type: 'line',
         yAxisIndex: 1,
         smooth: true,
@@ -190,6 +189,7 @@ export const buildBusinessTrendOption = (
 
 export const buildImplementationTrendOption = (
   metrics: ChartImplementationMetric[],
+  labels: ChartOptionLabels['implementationTrend'],
 ): EChartsOption => ({
   aria: { enabled: true },
   color: ['rgba(37, 99, 235, 0.18)', '#0f766e', '#be123c'],
@@ -235,13 +235,13 @@ export const buildImplementationTrendOption = (
   yAxis: [
     {
       type: 'value',
-      name: 'Cases',
+      name: labels.casesAxis,
       axisLabel: { color: axisTextColor },
       splitLine: { lineStyle: { color: splitLineColor } },
     },
     {
       type: 'value',
-      name: 'Review',
+      name: labels.reviewAxis,
       min: 60,
       max: 100,
       axisLabel: { color: axisTextColor },
@@ -250,7 +250,7 @@ export const buildImplementationTrendOption = (
   ],
   series: [
     {
-      name: 'Previous',
+      name: labels.previous,
       type: 'bar',
       barWidth: 16,
       itemStyle: {
@@ -262,7 +262,7 @@ export const buildImplementationTrendOption = (
       data: metrics.map((metric) => metric.previous),
     },
     {
-      name: 'Current',
+      name: labels.current,
       type: 'bar',
       barWidth: 16,
       itemStyle: {
@@ -271,7 +271,7 @@ export const buildImplementationTrendOption = (
       data: metrics.map((metric) => metric.current),
     },
     {
-      name: 'Review score',
+      name: labels.reviewScore,
       type: 'line',
       yAxisIndex: 1,
       smooth: true,
@@ -284,6 +284,7 @@ export const buildImplementationTrendOption = (
 
 export const buildQualityScatterOption = (
   points: QualityScatterPoint[],
+  labels: ChartOptionLabels['qualityScatter'],
 ): EChartsOption => ({
   aria: { enabled: true },
   color: ['#be123c'],
@@ -295,13 +296,13 @@ export const buildQualityScatterOption = (
     bottom: 42,
   },
   xAxis: {
-    name: 'Cycle time',
+    name: labels.cycleTimeAxis,
     type: 'value',
     axisLabel: { color: axisTextColor },
     splitLine: { lineStyle: { color: splitLineColor } },
   },
   yAxis: {
-    name: 'Defect rate',
+    name: labels.defectRateAxis,
     type: 'value',
     axisLabel: { color: axisTextColor },
     splitLine: { lineStyle: { color: splitLineColor } },
@@ -313,14 +314,14 @@ export const buildQualityScatterOption = (
     orient: 'horizontal',
     left: 'center',
     bottom: 0,
-    text: ['High complexity', 'Low'],
+    text: [labels.complexityHigh, labels.complexityLow],
     inRange: {
       color: ['#0f766e', '#b45309', '#be123c'],
     },
   },
   series: [
     {
-      name: 'Feature quality',
+      name: labels.seriesName,
       type: 'scatter',
       symbolSize: 16,
       data: points.map((point) => [
@@ -430,10 +431,12 @@ export const buildCapabilityTreemapOption = (
 
 export const buildCategoryShareOption = (
   shares: ChartCategoryShare[],
+  labels: ChartOptionLabels['categoryShare'],
 ): EChartsOption => {
   const activeSliceCount = shares.filter((share) => Number(share.value) > 0).length;
+  const numberFormatter = new Intl.NumberFormat(labels.numberLocale);
   const shareValueByName = new Map(
-    shares.map((share) => [share.name, formatChartValue(share.value)]),
+    shares.map((share) => [share.name, numberFormatter.format(share.value)]),
   );
 
   return {
@@ -479,7 +482,7 @@ export const buildCategoryShareOption = (
       z: 10,
       silent: true,
       style: {
-        text: 'Example',
+        text: labels.centerLabel,
         align: 'center',
         fill: '#27323a',
         fontSize: 20,
@@ -488,7 +491,7 @@ export const buildCategoryShareOption = (
     },
     series: [
       {
-        name: 'Chart archive',
+        name: labels.seriesName,
         type: 'pie',
         radius: ['38%', '72%'],
         center: ['50%', '58%'],
