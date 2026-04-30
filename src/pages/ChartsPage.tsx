@@ -14,6 +14,7 @@ export const ChartsPage = ({ copy, payload }: ChartsPageProps) => (
     {payload && (
       <ChartShowcaseSection
         section={copy.sections.charts}
+        refreshLabel={copy.refreshLabel}
         chartCards={copy.chartCards}
         chartOptionLabels={copy.chartOptions}
         sankeyCopy={copy.sankey}

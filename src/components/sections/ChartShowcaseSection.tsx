@@ -23,6 +23,7 @@ import { Section } from '../ui/Section';
 
 interface ChartShowcaseSectionProps {
   section: SectionCopy;
+  refreshLabel: string;
   chartCards: {
     businessTrend: ChartCardCopy;
     implementationTrend: ChartCardCopy;
@@ -42,12 +43,14 @@ interface ChartShowcaseSectionProps {
 
 export const ChartShowcaseSection = ({
   section,
+  refreshLabel,
   chartCards,
   chartOptionLabels,
   sankeyCopy,
   payload,
 }: ChartShowcaseSectionProps) => {
-  const chartData = useChartShowcaseData(payload);
+  const [chartRefreshKey, setChartRefreshKey] = useState(0);
+  const chartData = useChartShowcaseData(payload, chartRefreshKey);
   const [businessTrendLegendSelection, setBusinessTrendLegendSelection] =
     useState<ChartLegendSelection>({});
   const [genderBoxPlotLegendSelection, setGenderBoxPlotLegendSelection] =
@@ -59,6 +62,16 @@ export const ChartShowcaseSection = ({
       eyebrow={section.eyebrow}
       title={section.title}
       description={section.description}
+      actions={
+        <button
+          className="button button--ghost"
+          type="button"
+          aria-label={refreshLabel}
+          onClick={() => setChartRefreshKey((current) => current + 1)}
+        >
+          {refreshLabel}
+        </button>
+      }
     >
       <div className="grid grid--2 chart-grid">
         <Card

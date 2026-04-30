@@ -58,7 +58,59 @@ export const FlowSankeyChart = ({ workflow, copy }: FlowSankeyChartProps) => {
     key: target,
     value: sumBy(workflow.links, 'target', target),
   }));
+  const sourceValueByKey = Object.fromEntries(
+    sourceTotals.map((node) => [node.key, node.value]),
+  ) as Record<(typeof workflowSourceOrder)[number], number>;
+  const targetValueByKey = Object.fromEntries(
+    targetTotals.map((node) => [node.key, node.value]),
+  ) as Record<(typeof workflowTargetOrder)[number], number>;
   const sortedLinks = sortLinks(workflow.links).filter((link) => link.value > 0);
+  const visibleSourceTotals = sourceTotals.filter((node) => node.value > 0);
+  const visibleTargetTotals = targetTotals.filter((node) => node.value > 0);
+  const linksByTarget = workflowTargetOrder.map((targetKey) => ({
+    targetKey,
+    links: sortedLinks.filter((link) => link.target === targetKey),
+  }));
+
+  const getSourceNodeMarginStyle = (
+    key: (typeof workflowSourceOrder)[number],
+  ): CSSProperties => {
+    if (key === 'A') {
+      return {
+        marginBottom: sourceValueByKey.C > 0 ? 0 : sourceValueByKey.D2 > 0 ? 7.5 : 15,
+      };
+    }
+
+    if (key === 'C') {
+      return {
+        marginTop: sourceValueByKey.A > 0 ? 0 : 7.5,
+        marginBottom: sourceValueByKey.D2 > 0 ? 0 : 7.5,
+      };
+    }
+
+    return {
+      marginTop: sourceValueByKey.A > 0 || sourceValueByKey.C > 0 ? 0 : 15,
+    };
+  };
+
+  const getTargetNodeMarginStyle = (
+    key: (typeof workflowTargetOrder)[number],
+  ): CSSProperties => {
+    if (key === 'A-1') {
+      return {
+        marginBottom:
+          targetValueByKey['C-1'] > 0 || targetValueByKey['D2-1'] > 0 ? 0 : 15,
+      };
+    }
+
+    if (key === 'C-1') {
+      return {
+        marginBottom: targetValueByKey['D2-1'] > 0 ? 0 : 7.5,
+      };
+    }
+
+    return {};
+  };
 
   return (
     <div className="flow-sankey" aria-label={copy.ariaLabel}>
@@ -74,11 +126,11 @@ export const FlowSankeyChart = ({ workflow, copy }: FlowSankeyChartProps) => {
         <div className="flow-sankey__side flow-sankey__side--left">
           <strong className="flow-sankey__year">{copy.previousYear}</strong>
           <div className="flow-sankey__node-stack">
-            {sourceTotals.map((node) => (
+            {visibleSourceTotals.map((node) => (
               <div
                 key={node.key}
                 className="flow-sankey__node"
-                style={buildFlexStyle(node.value)}
+                style={{ ...buildFlexStyle(node.value), ...getSourceNodeMarginStyle(node.key) }}
               >
                 {copy.nodeLabels[node.key]}
               </div>
@@ -87,7 +139,11 @@ export const FlowSankeyChart = ({ workflow, copy }: FlowSankeyChartProps) => {
         </div>
         <div className="flow-sankey__center">
           <EChart
-            option={buildWorkflowSankeyOption(workflow)}
+            option={buildWorkflowSankeyOption(
+              workflow,
+              copy.nodeLabels,
+              copy.tooltipUnitLabel,
+            )}
             ariaLabel={copy.ariaLabel}
             fallbackDescription={copy.fallbackDescription}
             height={214}
@@ -100,25 +156,40 @@ export const FlowSankeyChart = ({ workflow, copy }: FlowSankeyChartProps) => {
           </div>
           <div className="flow-sankey__right-grid">
             <div className="flow-sankey__node-stack">
-              {targetTotals.map((node) => (
+              {visibleTargetTotals.map((node) => (
                 <div
                   key={node.key}
                   className="flow-sankey__node"
-                  style={buildFlexStyle(node.value)}
+                  style={{ ...buildFlexStyle(node.value), ...getTargetNodeMarginStyle(node.key) }}
                 >
                   {copy.nodeLabels[node.key]}
                 </div>
               ))}
             </div>
             <div className="flow-sankey__values">
-              {sortedLinks.map((link) => (
-                <span
-                  key={`${link.source}-${link.target}`}
-                  style={{ color: getWorkflowLinkColor(link.source, link.target) }}
-                >
-                  {numberFormatter.format(link.value)}
-                </span>
-              ))}
+              {linksByTarget
+                .filter(({ targetKey }) => targetValueByKey[targetKey] > 0)
+                .map(({ targetKey, links }) => (
+                  <div
+                    key={targetKey}
+                    className="flow-sankey__value-group"
+                    style={{
+                      ...buildFlexStyle(targetValueByKey[targetKey]),
+                      ...getTargetNodeMarginStyle(targetKey),
+                    }}
+                  >
+                    {links.map((link) => (
+                      <span
+                        key={`${link.source}-${link.target}`}
+                        style={{
+                          color: getWorkflowLinkColor(link.source, link.target),
+                        }}
+                      >
+                        {numberFormatter.format(link.value)}
+                      </span>
+                    ))}
+                  </div>
+                ))}
             </div>
           </div>
         </div>

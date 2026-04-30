@@ -31,6 +31,7 @@ export interface SankeyCopy {
   previousYear: string;
   currentYear: string;
   unitLabel: string;
+  tooltipUnitLabel: string;
   numberLocale: string;
   nodeLabels: Record<WorkflowNodeKey, string>;
   legendItems: {
@@ -411,6 +412,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
       previousYear: '2024년',
       currentYear: '2025년',
       unitLabel: '(명)',
+      tooltipUnitLabel: '명',
       numberLocale: 'ko-KR',
       nodeLabels: {
         A: '좋음',
@@ -776,6 +778,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
       previousYear: '2024',
       currentYear: '2025',
       unitLabel: '(people)',
+      tooltipUnitLabel: ' people',
       numberLocale: 'en-US',
       nodeLabels: {
         A: 'Good',

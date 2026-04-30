@@ -790,7 +790,7 @@ main {
   display: flex;
   height: 214px;
   flex-direction: column;
-  gap: 8px;
+  gap: 7.5px;
   transform: translateY(-1px);
 }
 
@@ -823,8 +823,9 @@ main {
 }
 
 .flow-sankey__values {
-  display: grid;
-  align-content: space-between;
+  display: flex;
+  flex-direction: column;
+  gap: 7.5px;
   height: 214px;
   padding-left: 10px;
   font-size: 0.72rem;
@@ -833,7 +834,17 @@ main {
   overflow: visible;
 }
 
+.flow-sankey__value-group {
+  display: grid;
+  min-height: 0;
+  align-content: space-between;
+}
+
 .flow-sankey__values span {
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  line-height: 1.2;
   white-space: nowrap;
 }
 

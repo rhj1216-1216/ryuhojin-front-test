@@ -759,9 +759,36 @@ export const buildCategoryShareOption = (
 
 export const buildWorkflowSankeyOption = (
   workflow: WorkflowSankeyData,
+  nodeLabels?: Record<string, string>,
+  unitLabel = '명',
 ): EChartsOption => ({
   aria: { enabled: true },
-  tooltip: { trigger: 'item' },
+  tooltip: {
+    trigger: 'item',
+    renderMode: 'html',
+    formatter: (params: unknown) => {
+      if (!isRecord(params)) {
+        return '';
+      }
+
+      const data = isRecord(params.data) ? params.data : null;
+      const source = typeof data?.source === 'string' ? data.source : null;
+      const target = typeof data?.target === 'string' ? data.target : null;
+      const value = typeof data?.value === 'number' ? data.value : null;
+
+      if (source && target && value !== null) {
+        const sourceLabel = nodeLabels?.[source] ?? source;
+        const targetLabel = nodeLabels?.[target] ?? target;
+        const formattedValue = new Intl.NumberFormat().format(value);
+        const linkColor = getWorkflowLinkColor(source, target);
+        const colorMarker = `<span style="display:inline-block;margin-right:6px;border-radius:50%;width:8px;height:8px;background:${linkColor};"></span>`;
+
+        return `${colorMarker}${sourceLabel} -> ${targetLabel}: ${formattedValue}${unitLabel}`;
+      }
+
+      return '';
+    },
+  },
   series: [
     {
       type: 'sankey',
@@ -774,7 +801,7 @@ export const buildWorkflowSankeyOption = (
       nodeAlign: 'left',
       layoutIterations: 0,
       draggable: false,
-      nodeGap: 8,
+      nodeGap: 7.5,
       nodeWidth: 0,
       emphasis: {
         focus: 'none',
