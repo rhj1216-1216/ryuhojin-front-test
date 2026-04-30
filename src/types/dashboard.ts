@@ -8,18 +8,16 @@ export interface NavigationItem {
   path: AppRoutePath;
 }
 
-export interface KpiMetric {
+export interface ProblemSummary {
   id: string;
   label: string;
   value: string;
   helper: string;
-  trend: 'up' | 'down' | 'flat';
 }
 
-export interface SkillSummary {
+export interface CapabilitySummary {
   id: string;
   category: string;
-  level: number;
   highlights: string[];
 }
 
@@ -140,8 +138,6 @@ export interface PortfolioGridRow {
 }
 
 export interface DashboardPayload {
-  kpis: KpiMetric[];
-  skills: SkillSummary[];
   monthlyMetrics: MonthlyBusinessMetric[];
   chartImplementationMetrics: ChartImplementationMetric[];
   chartCapabilityTree: ChartCapabilityNode[];

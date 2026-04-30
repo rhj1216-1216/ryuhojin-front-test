@@ -1,10 +1,11 @@
 import type {
+  CapabilitySummary,
   GenderBoxPlotGender,
-  KpiMetric,
   Locale,
   NavigationItem,
   PortfolioGridImpact,
   PortfolioGridStatus,
+  ProblemSummary,
   RoadmapStatus,
 } from '../types/dashboard';
 
@@ -194,7 +195,8 @@ export interface DashboardDictionary {
   refreshLabel: string;
   loading: string;
   errorTitle: string;
-  trendLabels: Record<KpiMetric['trend'], string>;
+  homeProblems: ProblemSummary[];
+  homeCapabilities: CapabilitySummary[];
   chartCards: {
     businessTrend: ChartCardCopy;
     implementationTrend: ChartCardCopy;
@@ -236,15 +238,15 @@ export interface DashboardDictionary {
 export const dictionary: Record<Locale, DashboardDictionary> = {
   ko: {
     appName: '류호진',
-    appSubtitle: 'Frontend Portfolio',
+    appSubtitle: '프론트엔드 포트폴리오',
     navigationLabel: '주요 페이지',
     homeLabel: '홈으로 이동',
-    heroEyebrow: 'Frontend Portfolio',
+    heroEyebrow: '프론트엔드 포트폴리오',
     heroTitle: '실무에서 자주 만나는 데이터 UI를 직접 구현했습니다',
     heroBody:
       '차트, 일정, 그리드가 섞인 운영형 UI를 React와 TypeScript로 재구성했습니다. 실제 데이터 없이도 화면 설계와 컴포넌트 책임이 보이도록 만든 포트폴리오 데모입니다.',
     heroCtaLabel: '구현 화면 보기',
-    portfolioLinkLabel: 'Notion Portfolio',
+    portfolioLinkLabel: 'Notion 포트폴리오',
     portfolioFocusLabel: '포트폴리오 구현 포커스',
     portfolioFocus: ['차트 공통화', '간트 타임라인', '커스텀 그리드', '다국어 화면'],
     previewLabel: '포트폴리오 화면 미리보기',
@@ -260,27 +262,70 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
     refreshLabel: '데이터 새로고침',
     loading: '데이터를 불러오는 중입니다.',
     errorTitle: '데이터를 불러오지 못했습니다.',
-    trendLabels: {
-      up: '개선',
-      down: '감소',
-      flat: '유지',
-    },
+    homeProblems: [
+      {
+        id: 'dense-data-ui',
+        label: '복합 데이터 화면',
+        value: '읽기 쉬운 배치',
+        helper: '차트, 테이블, 상태 요약이 함께 있어도 정보 우선순위가 흐려지지 않게 구성합니다.',
+      },
+      {
+        id: 'editable-grid-flow',
+        label: '편집형 그리드 흐름',
+        value: '예측 가능한 상태',
+        helper: '검색, 필터, 선택, 편집 모드가 동시에 움직여도 조작 흐름을 유지합니다.',
+      },
+      {
+        id: 'timeline-workbench',
+        label: '일정 조작 화면',
+        value: '이동과 리사이즈',
+        helper: '기간 데이터, 표시 범위, 항목 편집을 분리해 timeline 조작을 안정화합니다.',
+      },
+      {
+        id: 'responsive-safety',
+        label: '반응형 안정성',
+        value: '가로 넘침 방지',
+        helper: '차트와 그리드가 작은 화면에서도 읽히도록 스크롤과 fallback을 준비합니다.',
+      },
+    ],
+    homeCapabilities: [
+      {
+        id: 'component-boundaries',
+        category: '컴포넌트 책임 분리',
+        highlights: ['섹션은 조립 담당', '기능 모듈은 구현 담당', '공통 UI는 작은 단위 유지'],
+      },
+      {
+        id: 'data-shaping',
+        category: '데이터 가공 구조',
+        highlights: ['모의 API 경계', '화면용 데이터 가공', '명확한 응답 타입'],
+      },
+      {
+        id: 'interactive-state',
+        category: '상호작용 상태 설계',
+        highlights: ['차트 범례 상태', '그리드 편집 모드', '타임라인 조작'],
+      },
+      {
+        id: 'accessibility-responsive',
+        category: '접근성과 반응형',
+        highlights: ['접근성 라벨', '대체 설명', '모바일 스크롤 보호'],
+      },
+    ],
     chartCards: {
       businessTrend: {
-        title: 'Bar + Line',
-        description: '월별 지표와 전환율을 하나의 option builder에서 생성합니다.',
+        title: '막대 + 선형 차트',
+        description: '월별 지표와 전환율을 하나의 옵션 생성 함수에서 생성합니다.',
         ariaLabel: '월별 매출, 활성 사용자, 전환율 차트',
         fallbackDescription: '월별 지표를 막대와 라인으로 함께 비교하는 차트입니다.',
       },
       implementationTrend: {
-        title: 'Portfolio Chart Trend',
+        title: '차트 구현 추이',
         description:
           '전년도 비교 막대와 리뷰 점수를 함께 보여주고, 긴 데이터는 dataZoom으로 탐색합니다.',
         ariaLabel: '포트폴리오 차트 구현 추이',
         fallbackDescription: '이전 값과 현재 값을 비교하고 리뷰 점수를 라인으로 표시하는 복합 차트입니다.',
       },
       qualityScatter: {
-        title: 'Quality Scatter',
+        title: '품질 산점도',
         description:
           '처리 기간, 결함률, 복잡도를 scatter chart와 visualMap으로 함께 비교합니다.',
         ariaLabel: '기능 품질과 복잡도 scatter chart',
@@ -288,7 +333,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
           '각 기능의 처리 기간, 결함률, 복잡도를 점 위치와 색상으로 비교하는 산점도입니다.',
       },
       genderBoxPlot: {
-        title: 'Gender Box Plot',
+        title: '성별 박스플롯',
         description:
           '성별과 연령 그룹별 분포를 boxplot과 outlier 점으로 비교하는 더미 예제입니다.',
         ariaLabel: '성별과 연령 그룹별 분포 boxplot chart',
@@ -296,7 +341,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
           '성별과 연령 그룹별 최솟값, 사분위수, 중앙값, 최댓값, 이상치를 비교하는 boxplot 차트입니다.',
       },
       capabilityTreemap: {
-        title: 'Capability Treemap',
+        title: '역량 트리맵',
         description: '차트 아카이브의 구현 영역을 크기와 색상 강도로 재구성한 treemap 예제입니다.',
         ariaLabel: '포트폴리오 시각화 역량 treemap',
         fallbackDescription: 'ECharts, 마크업 차트, 공통 UX 항목의 비중을 treemap으로 표시합니다.',
@@ -308,7 +353,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
         fallbackDescription: '차트 예제 카테고리별 비율을 도넛 차트로 표시합니다.',
       },
       sankey: {
-        title: '커스텀 컴포넌트 + Sankey Flow',
+        title: '커스텀 컴포넌트 + Sankey 흐름',
         description:
           '전년 대비 판정현황 화면을 참고해 좌우 상태 막대와 흐름선, 범례, 수치를 분리해 구성했습니다.',
       },
@@ -467,7 +512,7 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
       },
     },
     dataGridCard: {
-      title: 'Custom Data Grid',
+      title: '커스텀 데이터 그리드',
       description:
         'AccordionTable과 RealGrid 경험을 더미 데이터로 재구성한 검색, 정렬, 필터, 선택 예제입니다.',
     },
@@ -479,26 +524,26 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
     ],
     pages: {
       charts: {
-        eyebrow: 'Charts Page',
+        eyebrow: '차트 페이지',
         title: '차트 구현 사례를 한 페이지에서 검증합니다',
         description:
-          'ECharts wrapper, option builder, i18n label, legend state, resize 처리를 차트 예제별로 분리해 보여줍니다.',
+          'ECharts 래퍼, 옵션 생성 함수, 다국어 문구, 범례 상태, 크기 변경 처리를 차트 예제별로 분리해 보여줍니다.',
       },
       dataGrid: {
-        eyebrow: 'Data Grid Page',
+        eyebrow: '데이터 그리드 페이지',
         title: '운영형 그리드 상호작용을 따로 검증합니다',
         description:
-          '검색, 필터, 정렬, parent/child 선택, 편집 모드 흐름을 분리된 페이지에서 확인할 수 있습니다.',
+          '검색, 필터, 정렬, 부모/자식 선택, 편집 모드 흐름을 분리된 페이지에서 확인할 수 있습니다.',
       },
       timeline: {
-        eyebrow: 'Timeline Page',
-        title: '일정 편집과 timeline 조작을 분리해 보여줍니다',
+        eyebrow: '타임라인 페이지',
+        title: '일정 편집과 타임라인 조작을 분리해 보여줍니다',
         description:
-          '왼쪽 편집 패널과 react-calendar-timeline canvas를 함께 배치해 move, resize, zoom 흐름을 확인합니다.',
+          '왼쪽 편집 패널과 react-calendar-timeline 캔버스를 함께 배치해 이동, 리사이즈, 확대/축소 흐름을 확인합니다.',
       },
     },
     demoRoutes: {
-      eyebrow: 'Demo Routes',
+      eyebrow: '데모 페이지',
       title: '기능별 데모 페이지',
       description:
         '메인 페이지는 프로젝트 맥락을 설명하고, 복잡한 UI는 기능별 페이지에서 집중해서 확인할 수 있도록 나눴습니다.',
@@ -506,32 +551,32 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
     },
     sections: {
       overview: {
-        eyebrow: 'About',
-        title: '프로젝트 개요',
+        eyebrow: '화면 문제',
+        title: '해결하려는 화면 문제',
         description:
-          '실제 회사 데이터 없이도 실무에서 다뤘던 설계 포인트를 설명할 수 있도록 재구성했습니다.',
+          '차트, 일정, 그리드가 한 화면에 섞일 때 생기는 읽기, 조작, 유지보수 문제를 더미 데이터로 재구성했습니다.',
       },
       skills: {
-        eyebrow: 'Skill Summary',
-        title: '핵심 역량 요약',
+        eyebrow: '구현 역량',
+        title: '구현으로 보여주는 프론트엔드 역량',
         description:
-          'UI 컴포넌트, 데이터 가공, 차트 공통화, API 계약을 분리해 유지보수 관점의 코드를 보여줍니다.',
+          '각 역량은 실제 화면과 코드에서 확인할 수 있는 구현 근거를 짧은 항목으로 정리했습니다.',
       },
       charts: {
-        eyebrow: 'ECharts Showcase',
+        eyebrow: '차트 쇼케이스',
         title: 'ECharts 차트 아카이브 데모',
         description:
           '포트폴리오의 차트 공통화 경험을 바탕으로 bar+line, dataZoom, scatter, boxplot, pie, treemap, sankey 예제를 구성했습니다.',
       },
       timeline: {
-        eyebrow: 'Roadmap',
+        eyebrow: '로드맵',
         title: 'react-calendar-timeline 편집 예제',
         description:
-          '왼쪽 리스트에서 timeline 항목을 수정하고, 확대/축소와 item move/resize 흐름을 확인할 수 있습니다.',
+          '왼쪽 리스트에서 타임라인 항목을 수정하고, 확대/축소와 항목 이동/리사이즈 흐름을 확인할 수 있습니다.',
       },
       table: {
-        eyebrow: 'Data Grid',
-        title: 'Custom Data Grid',
+        eyebrow: '데이터 그리드',
+        title: '커스텀 데이터 그리드',
         description:
           '계층형 데이터, 검색, 필터, 정렬, 선택, 편집 흐름을 포함한 포트폴리오형 더미 데이터 그리드를 보여줍니다.',
       },
@@ -578,11 +623,54 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
     refreshLabel: 'Refresh data',
     loading: 'Loading dashboard data.',
     errorTitle: 'Failed to load dashboard data.',
-    trendLabels: {
-      up: 'Improving',
-      down: 'Reduced',
-      flat: 'Steady',
-    },
+    homeProblems: [
+      {
+        id: 'dense-data-ui',
+        label: 'Dense data screens',
+        value: 'Readable layout',
+        helper: 'Charts, tables, and status summaries keep a clear information order.',
+      },
+      {
+        id: 'editable-grid-flow',
+        label: 'Editable grid flows',
+        value: 'Predictable state',
+        helper: 'Search, filters, selection, and edit mode stay understandable together.',
+      },
+      {
+        id: 'timeline-workbench',
+        label: 'Timeline workbench',
+        value: 'Move and resize',
+        helper: 'Date ranges, visible windows, and item edits are handled separately.',
+      },
+      {
+        id: 'responsive-safety',
+        label: 'Responsive safety',
+        value: 'No overflow',
+        helper: 'Charts and grids stay readable on small screens with scroll and fallback text.',
+      },
+    ],
+    homeCapabilities: [
+      {
+        id: 'component-boundaries',
+        category: 'Component Boundaries',
+        highlights: ['section assembly', 'feature ownership', 'small UI primitives'],
+      },
+      {
+        id: 'data-shaping',
+        category: 'Data Shaping',
+        highlights: ['mock API boundary', 'view model formatting', 'typed responses'],
+      },
+      {
+        id: 'interactive-state',
+        category: 'Interactive State',
+        highlights: ['chart legend state', 'grid edit mode', 'timeline controls'],
+      },
+      {
+        id: 'accessibility-responsive',
+        category: 'Accessible Responsive UI',
+        highlights: ['accessible labels', 'fallback descriptions', 'mobile scroll guards'],
+      },
+    ],
     chartCards: {
       businessTrend: {
         title: 'Bar + Line',
@@ -828,16 +916,16 @@ export const dictionary: Record<Locale, DashboardDictionary> = {
     },
     sections: {
       overview: {
-        eyebrow: 'About',
-        title: 'Project Overview',
+        eyebrow: 'UI Problems',
+        title: 'Screen Problems This Demo Solves',
         description:
-          'The app reconstructs practical frontend patterns with dummy data only.',
+          'The demo rebuilds readability, interaction, and maintenance problems that appear when charts, timelines, and grids share one product surface.',
       },
       skills: {
-        eyebrow: 'Skill Summary',
-        title: 'Core Capability Snapshot',
+        eyebrow: 'Implementation Capability',
+        title: 'Frontend Capability Shown in Code',
         description:
-          'The structure highlights reusable UI, data shaping, chart abstraction, and API contract thinking.',
+          'Each capability is backed by concrete implementation evidence visible in the UI and code.',
       },
       charts: {
         eyebrow: 'ECharts Showcase',

@@ -1,62 +1,6 @@
 import type { DashboardPayload } from '../types/dashboard';
 
 export const dashboardPayload: DashboardPayload = {
-  kpis: [
-    {
-      id: 'chart-coverage',
-      label: 'Chart patterns',
-      value: '17 cases',
-      helper: 'ECharts and markup archive',
-      trend: 'up',
-    },
-    {
-      id: 'api-contracts',
-      label: 'Grid interactions',
-      value: '6 flows',
-      helper: 'sort, filter, select, expand',
-      trend: 'flat',
-    },
-    {
-      id: 'delivery-cycle',
-      label: 'Timeline layers',
-      value: '3 layers',
-      helper: 'container, transform, renderer',
-      trend: 'down',
-    },
-    {
-      id: 'responsive-checks',
-      label: 'Responsive checks',
-      value: '4 breakpoints',
-      helper: 'desktop and mobile views',
-      trend: 'up',
-    },
-  ],
-  skills: [
-    {
-      id: 'visualization',
-      category: 'Data Visualization',
-      level: 92,
-      highlights: ['ECharts option builder', 'legend state', 'dataZoom patterns'],
-    },
-    {
-      id: 'architecture',
-      category: 'Frontend Architecture',
-      level: 88,
-      highlights: ['data flow separation', 'custom hooks', 'typed mock API'],
-    },
-    {
-      id: 'interaction',
-      category: 'Dashboard UX',
-      level: 84,
-      highlights: ['custom data grid', 'timeline editing', 'responsive QA'],
-    },
-    {
-      id: 'i18n',
-      category: 'i18n & Maintainability',
-      level: 78,
-      highlights: ['dictionary structure', 'copy separation', 'portfolio documentation'],
-    },
-  ],
   monthlyMetrics: [
     { month: 'Jan', revenue: 82, activeUsers: 34, conversionRate: 6.1 },
     { month: 'Feb', revenue: 91, activeUsers: 38, conversionRate: 6.4 },

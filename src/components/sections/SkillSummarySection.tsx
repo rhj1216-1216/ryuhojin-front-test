@@ -1,16 +1,16 @@
-import type { SkillSummary } from '../../types/dashboard';
+import type { CapabilitySummary } from '../../types/dashboard';
 import type { SectionCopy } from '../../i18n/dictionary';
 import { Card } from '../ui/Card';
 import { Section } from '../ui/Section';
 
 interface SkillSummarySectionProps {
   section: SectionCopy;
-  skills: SkillSummary[];
+  capabilities: CapabilitySummary[];
 }
 
 export const SkillSummarySection = ({
   section,
-  skills,
+  capabilities,
 }: SkillSummarySectionProps) => (
   <Section
     id="skills"
@@ -19,17 +19,15 @@ export const SkillSummarySection = ({
     description={section.description}
   >
     <Card>
-      <div className="progress-list">
-        {skills.map((skill) => (
-          <div className="progress-row" key={skill.id}>
-            <div className="progress-row__label">
-              <span>{skill.category}</span>
-              <span>{skill.level}%</span>
-            </div>
-            <div className="progress-track" aria-label={`${skill.category} ${skill.level}%`}>
-              <span style={{ width: `${skill.level}%` }} />
-            </div>
-            <p className="skill-highlights">{skill.highlights.join(' · ')}</p>
+      <div className="capability-list">
+        {capabilities.map((capability) => (
+          <div className="capability-row" key={capability.id}>
+            <strong>{capability.category}</strong>
+            <ul>
+              {capability.highlights.map((highlight) => (
+                <li key={highlight}>{highlight}</li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>

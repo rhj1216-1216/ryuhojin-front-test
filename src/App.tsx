@@ -87,7 +87,6 @@ const App = () => {
       <HomePage
         copy={t}
         locale={locale}
-        payload={viewModel?.payload}
         generatedAtLabel={viewModel?.generatedAtLabel}
         heroStats={heroStats}
         portfolioUrl={portfolioUrl}

@@ -3,7 +3,7 @@ import { SkillSummarySection } from '../components/sections/SkillSummarySection'
 import { Card } from '../components/ui/Card';
 import { Section } from '../components/ui/Section';
 import type { DashboardDictionary } from '../i18n/dictionary';
-import type { DashboardPayload, Locale } from '../types/dashboard';
+import type { Locale } from '../types/dashboard';
 
 interface HeroStat {
   label: string;
@@ -13,7 +13,6 @@ interface HeroStat {
 interface HomePageProps {
   copy: DashboardDictionary;
   locale: Locale;
-  payload?: DashboardPayload;
   generatedAtLabel?: string;
   heroStats: HeroStat[];
   portfolioUrl: string;
@@ -23,7 +22,6 @@ interface HomePageProps {
 export const HomePage = ({
   copy,
   locale,
-  payload,
   generatedAtLabel,
   heroStats,
   portfolioUrl,
@@ -104,16 +102,14 @@ export const HomePage = ({
       </aside>
     </section>
 
-    {payload && (
-      <>
-        <OverviewSection
-          section={copy.sections.overview}
-          kpis={payload.kpis}
-          trendLabels={copy.trendLabels}
-        />
-        <SkillSummarySection section={copy.sections.skills} skills={payload.skills} />
-      </>
-    )}
+    <OverviewSection
+      section={copy.sections.overview}
+      problems={copy.homeProblems}
+    />
+    <SkillSummarySection
+      section={copy.sections.skills}
+      capabilities={copy.homeCapabilities}
+    />
 
     <Section
       id="demo-routes"
